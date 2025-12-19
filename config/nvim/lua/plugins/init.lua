@@ -16,6 +16,7 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim with all plugins
 require("lazy").setup({
   require("plugins.lualine"),
+  require("plugins.bufferline"),
   require("plugins.nvimtree"),
   require("plugins.treesitter"),
   require("plugins.alpha"),
@@ -30,8 +31,13 @@ require("lazy").setup({
   require("plugins.minimap"),
   require("plugins.none-ls"),
 
-  "christoomey/vim-tmux-navigator",
-  "wakatime/vim-wakatime", lazy = false,
+  { "christoomey/vim-tmux-navigator", lazy = false },
+  { "wakatime/vim-wakatime", lazy = false },
+  { "ahmedkhalf/project.nvim", lazy = false, config = function()
+    require("project_nvim").setup({})
+    require("telescope").load_extension("projects")
+  end },
+  { "RRethy/vim-illuminate", enabled = false },
 
   {
     "catppuccin/nvim",
@@ -40,7 +46,38 @@ require("lazy").setup({
     config = function()
       require("catppuccin").setup({
         flavour = "frappe",
+        background = {
+          light = "latte",
+          dark = "frappe",
+        },
+        transparent_background = false,
         show_end_of_buffer = false,
+        term_colors = false,
+        styles = {
+          comments = { "italic" },
+          conditionals = { "italic" },
+        },
+        integrations = {
+          cmp = true,
+          gitsigns = true,
+          treesitter = true,
+          telescope = true,
+          native_lsp = {
+            enabled = true,
+            virtual_text = {
+              errors = { "italic" },
+              hints = { "italic" },
+              warnings = { "italic" },
+              information = { "italic" },
+            },
+            underlines = {
+              errors = { "underline" },
+              hints = { "underline" },
+              warnings = { "underline" },
+              information = { "underline" },
+            },
+          },
+        },
       })
       vim.cmd.colorscheme("catppuccin")
     end,
