@@ -1,4 +1,3 @@
--- LSP configuration (synchronized with LunarVim config)
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
@@ -7,64 +6,23 @@ return {
     "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
-    local ok_mason, mason = pcall(require, "mason")
-    if not ok_mason then return end
-    mason.setup()
-
-    local ok_mason_lsp, mason_lspconfig = pcall(require, "mason-lspconfig")
-    if not ok_mason_lsp then return end
-    mason_lspconfig.setup({
-      -- Core LSP servers synchronized with lvim
+    require("mason").setup()
+    require("mason-lspconfig").setup({
       ensure_installed = {
-        "lua_ls",       -- Lua
-        "pyright",      -- Python
-        "gopls",        -- Go
-        "ts_ls",        -- JavaScript / TypeScript / Bun
-        "astro",        -- Astro
-        "rust_analyzer",-- Rust
-        "intelephense", -- PHP
+        "lua_ls",
+        "pyright",
+        "gopls",
+        "rust_analyzer",
+        "intelephense",
+        "ts_ls",
+        "denols",
+        "astro",
         "html",
         "cssls",
         "jsonls",
       },
     })
 
-    local ok_lsp, lspconfig = pcall(require, "lspconfig")
-    if not ok_lsp then return end
-
-    local ok_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-    local capabilities = ok_cmp and cmp_nvim_lsp.default_capabilities() or {}
-
-    local servers = {
-      "lua_ls",
-      "pyright",
-      "gopls",
-      "ts_ls",
-      "astro",
-      "rust_analyzer",
-      "intelephense",
-      "html",
-      "cssls",
-      "jsonls",
-    }
-
-    -- Temporarily disable deprecation warnings
-    local deprecate = vim.deprecate
-    vim.deprecate = function() end
-
-    for _, server in ipairs(servers) do
-      lspconfig[server].setup({
-        capabilities = capabilities,
-      })
-    end
-
-    -- Restore deprecate function
-    vim.deprecate = deprecate
-
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-    vim.keymap.set("n", "gr", vim.lsp.buf.references)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover)
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)
+    require("lsp")
   end,
 }

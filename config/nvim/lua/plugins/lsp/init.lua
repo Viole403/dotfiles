@@ -1,0 +1,8 @@
+require("lsp.lua")
+require("lsp.python")
+require("lsp.go")
+require("lsp.rust")
+require("lsp.ts")
+require("lsp.deno")
+require("lsp.php")
+require("lsp.web")
