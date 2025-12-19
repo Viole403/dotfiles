@@ -34,7 +34,7 @@ require("lazy").setup({
   { "christoomey/vim-tmux-navigator", lazy = false },
   { "wakatime/vim-wakatime", lazy = false },
   {
-    "DrKJeff16/project.nvim",
+    "ahmedkhalf/project.nvim",
     lazy = false,
     config = function()
       local ok, project = pcall(require, "project_nvim")
