@@ -117,9 +117,16 @@ install_dependencies() {
   # Check for essential tools
   command_exists rg || missing_deps+=("ripgrep")
   command_exists fd || missing_deps+=("fd")
+  command_exists cargo || missing_deps+=("cargo")
 
   if [ ${#missing_deps[@]} -eq 0 ]; then
     print_info "All essential dependencies are already installed ✓"
+    # Auto-install code-minimap if cargo is available
+    if command_exists cargo && ! command_exists code-minimap; then
+      print_info "Installing code-minimap..."
+      cargo install --locked code-minimap
+      print_info "code-minimap installed ✓"
+    fi
     return 0
   fi
 
@@ -144,6 +151,7 @@ install_dependencies() {
         case $dep in
           ripgrep) sudo apt-get install -y ripgrep ;;
           fd) sudo apt-get install -y fd-find ;;
+          cargo) sudo apt-get install -y cargo ;;
         esac
       done
       # Create fd symlink if needed on Debian/Ubuntu
@@ -160,6 +168,7 @@ install_dependencies() {
         case $dep in
           ripgrep) sudo dnf install -y ripgrep ;;
           fd) sudo dnf install -y fd-find ;;
+          cargo) sudo dnf install -y cargo ;;
         esac
       done
       ;;
@@ -169,6 +178,7 @@ install_dependencies() {
         case $dep in
           ripgrep) sudo pacman -S --noconfirm ripgrep ;;
           fd) sudo pacman -S --noconfirm fd ;;
+          cargo) sudo pacman -S --noconfirm rust ;;
         esac
       done
       ;;
@@ -178,6 +188,7 @@ install_dependencies() {
         case $dep in
           ripgrep) brew install ripgrep ;;
           fd) brew install fd ;;
+          cargo) brew install rust ;;
         esac
       done
       ;;
@@ -187,6 +198,7 @@ install_dependencies() {
         case $dep in
           ripgrep) sudo zypper install -y ripgrep ;;
           fd) sudo zypper install -y fd ;;
+          cargo) sudo zypper install -y cargo ;;
         esac
       done
       ;;
@@ -196,6 +208,7 @@ install_dependencies() {
         case $dep in
           ripgrep) sudo apk add ripgrep ;;
           fd) sudo apk add fd ;;
+          cargo) sudo apk add cargo ;;
         esac
       done
       ;;
@@ -208,6 +221,13 @@ install_dependencies() {
   esac
 
   print_info "Dependencies installed successfully ✓"
+
+  # Auto-install code-minimap if cargo is available
+  if command_exists cargo && ! command_exists code-minimap; then
+    print_info "Installing code-minimap..."
+    cargo install --locked code-minimap
+    print_info "code-minimap installed ✓"
+  fi
 }
 
 # Install optional dependencies

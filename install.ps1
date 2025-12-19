@@ -105,9 +105,16 @@ function Install-Dependencies {
     # Check for essential tools
     if (-not (Test-CommandExists "rg")) { $missingDeps += "ripgrep" }
     if (-not (Test-CommandExists "fd")) { $missingDeps += "fd" }
+    if (-not (Test-CommandExists "cargo")) { $missingDeps += "cargo" }
 
     if ($missingDeps.Count -eq 0) {
         Write-Info "All essential dependencies are already installed ✓"
+        # Auto-install code-minimap if cargo is available
+        if ((Test-CommandExists "cargo") -and -not (Test-CommandExists "code-minimap")) {
+            Write-Info "Installing code-minimap..."
+            cargo install --locked code-minimap
+            Write-Info "code-minimap installed ✓"
+        }
         return
     }
 
@@ -140,6 +147,7 @@ function Install-Dependencies {
                 switch ($dep) {
                     "ripgrep" { scoop install ripgrep }
                     "fd" { scoop install fd }
+                    "cargo" { scoop install rust }
                 }
             }
         }
@@ -148,6 +156,7 @@ function Install-Dependencies {
                 switch ($dep) {
                     "ripgrep" { choco install ripgrep -y }
                     "fd" { choco install fd -y }
+                    "cargo" { choco install rust -y }
                 }
             }
         }
@@ -156,6 +165,7 @@ function Install-Dependencies {
                 switch ($dep) {
                     "ripgrep" { winget install BurntSushi.ripgrep.MSVC --silent }
                     "fd" { winget install sharkdp.fd --silent }
+                    "cargo" { winget install Rustlang.Rust.MSVC --silent }
                 }
             }
         }
@@ -165,6 +175,13 @@ function Install-Dependencies {
 
     # Refresh PATH
     $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH", "User")
+
+    # Auto-install code-minimap if cargo is available
+    if ((Test-CommandExists "cargo") -and -not (Test-CommandExists "code-minimap")) {
+        Write-Info "Installing code-minimap..."
+        cargo install --locked code-minimap
+        Write-Info "code-minimap installed ✓"
+    }
 }
 
 # Detect dotfiles directory
