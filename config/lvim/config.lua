@@ -128,7 +128,7 @@ lvim.builtin.treesitter.rainbow = {
 lvim.builtin.terminal.active = true
 lvim.builtin.terminal.direction = "horizontal"
 lvim.builtin.terminal.size = 10
-lvim.builtin.terminal.open_mapping = "<C-\\>"
+lvim.builtin.terminal.open_mapping = "<A-`>"
 
 vim.g.tmux_navigator_no_mappings = 1
 vim.api.nvim_set_keymap("n", "<C-h>", ":TmuxNavigateLeft<CR>", {silent = true})
