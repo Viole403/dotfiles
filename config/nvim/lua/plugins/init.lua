@@ -33,10 +33,17 @@ require("lazy").setup({
 
   { "christoomey/vim-tmux-navigator", lazy = false },
   { "wakatime/vim-wakatime", lazy = false },
-  { "DrKJeff16/project.nvim", lazy = false, config = function()
-    require("project_nvim").setup({})
-    require("telescope").load_extension("projects")
-  end },
+  {
+    "DrKJeff16/project.nvim",
+    lazy = false,
+    config = function()
+      local ok, project = pcall(require, "project_nvim")
+      if ok then
+        project.setup({})
+        pcall(require("telescope").load_extension, "projects")
+      end
+    end
+  },
   { "RRethy/vim-illuminate", enabled = false },
   {
     "catppuccin/nvim",
