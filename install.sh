@@ -195,7 +195,7 @@ install_dependencies() {
   command_exists pip3 || missing_deps+=("pip3")
   command_exists npm || missing_deps+=("npm")
   command_exists cargo || missing_deps+=("cargo")
-  
+
   # Check for essential CLI tools
   command_exists rg || missing_deps+=("ripgrep")
   command_exists fd || missing_deps+=("fd")
@@ -244,7 +244,7 @@ install_dependencies() {
           pip3) sudo apt-get install -y python3-pip ;;
           nodejs) sudo apt-get install -y nodejs npm ;;
           npm) sudo apt-get install -y npm ;;
-          golang) 
+          golang)
             print_info "Installing Go >= 1.21..."
             wget -q https://go.dev/dl/go1.22.0.linux-amd64.tar.gz -O /tmp/go.tar.gz
             sudo rm -rf /usr/local/go
@@ -256,7 +256,7 @@ install_dependencies() {
           cargo) sudo apt-get install -y cargo ;;
           ripgrep) sudo apt-get install -y ripgrep ;;
           fd) sudo apt-get install -y fd-find ;;
-          lazygit) 
+          lazygit)
             LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
             curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
             tar xf /tmp/lazygit.tar.gz -C /tmp lazygit

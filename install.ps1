@@ -200,7 +200,7 @@ function Install-Dependencies {
     if (-not (Test-CommandExists "pip")) { $missingDeps += "pip" }
     if (-not (Test-CommandExists "npm")) { $missingDeps += "npm" }
     if (-not (Test-CommandExists "cargo")) { $missingDeps += "cargo" }
-    
+
     # Check for essential CLI tools
     if (-not (Test-CommandExists "rg")) { $missingDeps += "ripgrep" }
     if (-not (Test-CommandExists "fd")) { $missingDeps += "fd" }
