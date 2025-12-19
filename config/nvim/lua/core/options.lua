@@ -13,6 +13,8 @@ if vim.fn.has("nvim-0.10") == 1 then
   }
 end
 
+-- Disable nerd fonts
+vim.g.have_nerd_font = false
 
 vim.opt.termguicolors = true
 vim.diagnostic.config({ signs = false })
