@@ -27,18 +27,10 @@ require("lazy").setup({
   require("plugins.scala"),
   require("plugins.rainbow"),
   require("plugins.telescope"),
+  require("plugins.minimap"),
 
   "christoomey/vim-tmux-navigator",
   "wakatime/vim-wakatime", lazy = false,
-
-  {
-    "wfxr/minimap.vim",
-    build = "cargo install --locked code-minimap",
-    init = function()
-      vim.g.minimap_width = 10
-      vim.g.minimap_auto_start = 1
-    end,
-  },
 
   {
     "catppuccin/nvim",
