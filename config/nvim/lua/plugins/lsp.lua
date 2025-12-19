@@ -34,7 +34,10 @@ return {
     })
 
     local ok_lsp, lspconfig = pcall(require, "lspconfig")
-    if not ok_lsp then return end
+    if not ok_lsp then
+      vim.notify = notify
+      return
+    end
 
     local ok_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
     local capabilities = ok_cmp and cmp_nvim_lsp.default_capabilities() or {}
@@ -49,10 +52,13 @@ return {
       "jsonls",
     }
 
+    -- Wrap in pcall to suppress any access warnings
     for _, server in ipairs(servers) do
-      lspconfig[server].setup({
-        capabilities = capabilities,
-      })
+      pcall(function()
+        lspconfig[server].setup({
+          capabilities = capabilities,
+        })
+      end)
     end
 
     -- Restore original notify
