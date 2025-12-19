@@ -29,7 +29,7 @@ require("lazy").setup({
   require("plugins.telescope"),
 
   "christoomey/vim-tmux-navigator",
-  "wakatime/vim-wakatime",
+  "wakatime/vim-wakatime", lazy = false,
 
   {
     "wfxr/minimap.vim",
