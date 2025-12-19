@@ -226,11 +226,11 @@ formatters.setup {
 -- These are automatically configured by LunarVim's LSP manager
 -- Additional tools configured via Mason: biome, deno, editorconfig-checker, goimport, gofumpt, golines, mdformat
 
--- Tailwind
-vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tailwindcss" })
-require("lvim.lsp.manager").setup("tailwindcss", {
-  filetypes = { "typescriptreact" }
-})
+-- Tailwind (Disabled due to this repository was archived by the owner)
+-- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tailwindcss" })
+-- require("lvim.lsp.manager").setup("tailwindcss", {
+--   filetypes = { "typescriptreact" }
+-- })
 
 -- Scala
 vim.api.nvim_create_autocmd("BufEnter", {
