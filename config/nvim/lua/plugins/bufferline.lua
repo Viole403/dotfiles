@@ -8,11 +8,22 @@ return {
     require("bufferline").setup({
       options = {
         mode = "buffers",
+
         show_buffer_icons = false,
         show_buffer_close_icons = false,
         show_close_icon = false,
+
         separator_style = "thin",
         always_show_bufferline = true,
+
+        custom_filter = function(bufnr)
+          local ft = vim.bo[bufnr].filetype
+          if ft == "minimap" then
+            return false
+          end
+          return true
+        end,
+
         offsets = {
           {
             filetype = "NvimTree",
@@ -21,15 +32,15 @@ return {
             separator = true,
           },
         },
+
         diagnostics = "nvim_lsp",
-        diagnostics_indicator = function(count, level)
-          local icon = level:match("error") and " " or " "
-          return " " .. icon .. count
+        diagnostics_indicator = function(count)
+          return " " .. count
         end,
       },
     })
 
-    -- Keybindings for buffer navigation
+    -- Keybindings
     vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { desc = "Next buffer" })
     vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>", { desc = "Previous buffer" })
     vim.keymap.set("n", "<leader>bd", "<cmd>bdelete<CR>", { desc = "Delete buffer" })
