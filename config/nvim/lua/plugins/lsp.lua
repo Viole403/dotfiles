@@ -23,6 +23,6 @@ return {
       },
     })
 
-    require("lsp")
+    require("plugins.lsp")
   end,
 }
