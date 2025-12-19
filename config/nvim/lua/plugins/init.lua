@@ -52,4 +52,9 @@ require("lazy").setup({
       vim.cmd.colorscheme("catppuccin")
     end,
   },
+}, {
+  -- Disable luarocks support to avoid build issues
+  rocks = {
+    enabled = false,
+  },
 })
