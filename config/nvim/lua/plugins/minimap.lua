@@ -1,7 +1,7 @@
 -- plugins/minimap.lua
 return {
   "wfxr/minimap.vim",
-  cmd = { "Minimap", "MinimapToggle", "MinimapClose" },
+  cmd = { "Minimap", "MinimapToggle"},
   dependencies = "nvim-lua/plenary.nvim",
   lazy = false,
   config = function()
