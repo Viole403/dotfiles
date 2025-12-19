@@ -6,15 +6,6 @@ return {
     "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
-    -- Suppress deprecation warnings
-    local notify = vim.notify
-    vim.notify = function(msg, ...)
-      if msg:match("lspconfig") and msg:match("deprecated") then
-        return
-      end
-      notify(msg, ...)
-    end
-
     local ok_mason, mason = pcall(require, "mason")
     if not ok_mason then return end
     mason.setup()
@@ -34,10 +25,7 @@ return {
     })
 
     local ok_lsp, lspconfig = pcall(require, "lspconfig")
-    if not ok_lsp then
-      vim.notify = notify
-      return
-    end
+    if not ok_lsp then return end
 
     local ok_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
     local capabilities = ok_cmp and cmp_nvim_lsp.default_capabilities() or {}
@@ -52,17 +40,18 @@ return {
       "jsonls",
     }
 
-    -- Wrap in pcall to suppress any access warnings
+    -- Temporarily disable deprecation warnings
+    local deprecate = vim.deprecate
+    vim.deprecate = function() end
+
     for _, server in ipairs(servers) do
-      pcall(function()
-        lspconfig[server].setup({
-          capabilities = capabilities,
-        })
-      end)
+      lspconfig[server].setup({
+        capabilities = capabilities,
+      })
     end
 
-    -- Restore original notify
-    vim.notify = notify
+    -- Restore deprecate function
+    vim.deprecate = deprecate
 
     vim.keymap.set("n", "gd", vim.lsp.buf.definition)
     vim.keymap.set("n", "gr", vim.lsp.buf.references)
