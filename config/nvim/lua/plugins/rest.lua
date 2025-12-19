@@ -1,6 +1,8 @@
 -- lua/plugins/rest.lua
 return {
   "rest-nvim/rest.nvim",
+  ft = "http",
+  cmd = { "RestNvim", "RestNvimPreview", "RestNvimLast" },
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
   },
