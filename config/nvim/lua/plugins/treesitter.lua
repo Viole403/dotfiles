@@ -1,4 +1,5 @@
 -- plugins/treesitter.lua
+-- Treesitter configuration (synchronized with LunarVim config)
 return {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
@@ -7,8 +8,9 @@ return {
     if not ok then return end
 
     configs.setup {
+      -- Core parsers synchronized with lvim config
       ensure_installed = {
-        "bash", "lua", "python", "go", "java", "php", "rust", "html", "css", "json"
+        "bash", "lua", "python", "go", "java", "php", "rust", "html", "css", "json", "javascript", "typescript", "tsx", "yaml", "markdown"
       },
       sync_install = false,
       auto_install = true,

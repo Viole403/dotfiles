@@ -1,3 +1,4 @@
+-- LSP configuration (synchronized with LunarVim config)
 return {
   "neovim/nvim-lspconfig",
   dependencies = {
@@ -13,6 +14,7 @@ return {
     local ok_mason_lsp, mason_lspconfig = pcall(require, "mason-lspconfig")
     if not ok_mason_lsp then return end
     mason_lspconfig.setup({
+      -- Core LSP servers synchronized with lvim
       ensure_installed = {
         "lua_ls",
         "pyright",
@@ -21,6 +23,14 @@ return {
         "html",
         "cssls",
         "jsonls",
+        -- Additional tools
+        "biome",
+        "deno",
+        "editorconfig-checker",
+        "goimport",
+        "gofumpt",
+        "golines",
+        "mdformat",
       },
     })
 

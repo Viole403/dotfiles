@@ -184,25 +184,27 @@ lvim.keys.normal_mode["<leader>fb"] = "<cmd>Telescope buffers<CR>"
 lvim.keys.normal_mode["<leader>fh"] = "<cmd>Telescope help_tags<CR>"
 lvim.keys.normal_mode["<leader>pd"] = "<cmd>Telescope projects<CR>"
 
--- Intellisense tree-sitter parsers
+-- Intellisense tree-sitter parsers (synchronized with nvim config)
 lvim.builtin.treesitter.ensure_installed = {
   "bash",
+  "lua",
+  "python",
+  "go",
+  "java",
+  "php",
+  "rust",
+  "html",
+  "css",
+  "json",
+  "javascript",
+  "typescript",
+  "tsx",
+  "yaml",
+  "markdown",
+  -- Additional parsers for LunarVim-specific use
   "scala",
   "org",
   "c",
-  "javascript",
-  "json",
-  "lua",
-  "python",
-  "typescript",
-  "tsx",
-  "css",
-  "rust",
-  "java",
-  "yaml",
-  "html",
-  "go",
-  "php",
   "ruby",
   "http",
 }
@@ -218,6 +220,11 @@ formatters.setup {
 --   pattern = { "*.sql", "*.mysql", "*.pssql" },
 --   command = "lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })",
 -- })
+
+-- LSP Configuration (synchronized with nvim config)
+-- Core LSP servers: lua_ls, pyright, gopls, ts_ls, html, cssls, jsonls
+-- These are automatically configured by LunarVim's LSP manager
+-- Additional tools configured via Mason: biome, deno, editorconfig-checker, goimport, gofumpt, golines, mdformat
 
 -- Tailwind
 vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "tailwindcss" })
