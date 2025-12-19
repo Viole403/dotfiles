@@ -10,7 +10,7 @@ return {
     configs.setup {
       -- Core parsers synchronized with lvim config
       ensure_installed = {
-        "bash", "lua", "python", "go", "java", "php", "rust", "html", "css", "json", "javascript", "typescript", "tsx", "yaml", "markdown",
+        "vim", "vimdoc", "bash", "lua", "python", "go", "java", "php", "rust", "html", "css", "json", "javascript", "typescript", "tsx", "yaml", "markdown",
         "scala", "org", "c", "ruby", "http"
       },
       sync_install = false,
