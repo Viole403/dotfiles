@@ -155,7 +155,26 @@ function Test-NodeVersion {
     }
     try {
         $nodeVersion = (node --version) -replace 'v([0-9.]+).*', '$1'
-        Write-Info "Node $nodeVersion ✓"
+        if (Test-VersionGreaterOrEqual $nodeVersion "14.0.0") {
+            Write-Info "Node $nodeVersion ✓ (>= 14.0 required)"
+            return $true
+        } else {
+            Write-Warn "Node $nodeVersion found, but >= 14.0 is required"
+            return $false
+        }
+    } catch {
+        return $false
+    }
+}
+
+# Check PHP version
+function Test-PhpVersion {
+    if (-not (Test-CommandExists "php")) {
+        return $false
+    }
+    try {
+        $phpVersion = (php --version | Select-Object -First 1) -replace 'PHP ([0-9.]+).*', '$1'
+        Write-Info "PHP $phpVersion ✓"
         return $true
     } catch {
         return $false
@@ -192,6 +211,11 @@ function Install-Dependencies {
 
     if (-not (Test-NodeVersion)) {
         $missingDeps += "nodejs"
+        $failedVersionChecks += "nodejs>=14.0"
+    }
+
+    if (-not (Test-PhpVersion)) {
+        $missingDeps += "php"
     }
 
     # Check for core development tools
@@ -201,6 +225,7 @@ function Install-Dependencies {
     if (-not (Test-CommandExists "npm")) { $missingDeps += "npm" }
     if (-not (Test-CommandExists "cargo")) { $missingDeps += "cargo" }
     if (-not (Test-CommandExists "composer")) { $missingDeps += "composer" }
+    if (-not (Test-CommandExists "luarocks")) { $missingDeps += "luarocks" }
 
     # Check for essential CLI tools
     if (-not (Test-CommandExists "rg")) { $missingDeps += "ripgrep" }

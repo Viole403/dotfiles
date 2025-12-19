@@ -153,7 +153,22 @@ check_node_version() {
     return 1
   fi
   local node_version=$(node --version | sed 's/v\([0-9.]*\).*/\1/')
-  print_info "Node $node_version ✓"
+  if version_ge "$node_version" "14.0.0"; then
+    print_info "Node $node_version ✓ (>= 14.0 required)"
+    return 0
+  else
+    print_warn "Node $node_version found, but >= 14.0 is required"
+    return 1
+  fi
+}
+
+# Check PHP version
+check_php_version() {
+  if ! command_exists php; then
+    return 1
+  fi
+  local php_version=$(php --version | head -n1 | sed 's/PHP \([0-9.]*\).*/\1/')
+  print_info "PHP $php_version ✓"
   return 0
 }
 
@@ -187,6 +202,11 @@ install_dependencies() {
 
   if ! check_node_version; then
     missing_deps+=("nodejs")
+    failed_version_checks+=("nodejs>=14.0")
+  fi
+
+  if ! check_php_version; then
+    missing_deps+=("php")
   fi
 
   # Check for core development tools
@@ -196,6 +216,7 @@ install_dependencies() {
   command_exists npm || missing_deps+=("npm")
   command_exists cargo || missing_deps+=("cargo")
   command_exists composer || missing_deps+=("composer")
+  command_exists luarocks || missing_deps+=("luarocks")
 
   # Check for essential CLI tools
   command_exists rg || missing_deps+=("ripgrep")
@@ -243,8 +264,18 @@ install_dependencies() {
           make) sudo apt-get install -y build-essential ;;
           python3) sudo apt-get install -y python3 ;;
           pip3) sudo apt-get install -y python3-pip ;;
-          nodejs) sudo apt-get install -y nodejs npm ;;
+          nodejs)
+            # Install Node.js 20.x (LTS)
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            ;;
           npm) sudo apt-get install -y npm ;;
+          php)
+            sudo apt-get install -y php php-cli php-mbstring php-xml php-zip php-curl
+            ;;
+          luarocks)
+            sudo apt-get install -y luarocks
+            ;;
           golang)
             print_info "Installing Go >= 1.21..."
             wget -q https://go.dev/dl/go1.22.0.linux-amd64.tar.gz -O /tmp/go.tar.gz
