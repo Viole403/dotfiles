@@ -33,12 +33,11 @@ require("lazy").setup({
 
   { "christoomey/vim-tmux-navigator", lazy = false },
   { "wakatime/vim-wakatime", lazy = false },
-  { "ahmedkhalf/project.nvim", lazy = false, config = function()
+  { "DrKJeff16/project.nvim", lazy = false, config = function()
     require("project_nvim").setup({})
     require("telescope").load_extension("projects")
   end },
   { "RRethy/vim-illuminate", enabled = false },
-
   {
     "catppuccin/nvim",
     name = "catppuccin",
