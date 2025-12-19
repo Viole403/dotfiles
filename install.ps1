@@ -367,6 +367,17 @@ function Install-Dependencies {
         Write-Info "code-minimap installed ✓"
     }
 
+    # Auto-install tree-sitter-cli if cargo is available
+    if ((Test-CommandExists "cargo") -and -not (Test-CommandExists "tree-sitter")) {
+        Write-Info "Installing tree-sitter-cli..."
+        cargo install --locked tree-sitter-cli
+        Write-Info "tree-sitter-cli installed ✓"
+    } elseif ((Test-CommandExists "npm") -and -not (Test-CommandExists "tree-sitter")) {
+        Write-Info "Installing tree-sitter-cli via npm..."
+        npm install -g tree-sitter-cli
+        Write-Info "tree-sitter-cli installed ✓"
+    }
+
     # Install formatter tools (none-ls requirements)
     Write-Step "Installing formatter tools for none-ls..."
 

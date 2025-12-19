@@ -452,6 +452,17 @@ install_dependencies() {
     print_info "code-minimap installed ✓"
   fi
 
+  # Auto-install tree-sitter-cli if cargo is available
+  if command_exists cargo && ! command_exists tree-sitter; then
+    print_info "Installing tree-sitter-cli..."
+    cargo install --locked tree-sitter-cli
+    print_info "tree-sitter-cli installed ✓"
+  elif command_exists npm && ! command_exists tree-sitter; then
+    print_info "Installing tree-sitter-cli via npm..."
+    npm install -g tree-sitter-cli
+    print_info "tree-sitter-cli installed ✓"
+  fi
+
   # Install formatter tools (none-ls requirements)
   print_step "Installing formatter tools for none-ls..."
 
