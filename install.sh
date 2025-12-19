@@ -102,6 +102,61 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+# Version comparison helper
+version_ge() {
+  [ "$(printf '%s\n' "$1" "$2" | sort -V | head -n1)" = "$2" ]
+}
+
+# Check neovim version
+check_neovim_version() {
+  if ! command_exists nvim; then
+    return 1
+  fi
+  local nvim_version=$(nvim --version | head -n1 | sed 's/NVIM v\([0-9.]*\).*/\1/')
+  if version_ge "$nvim_version" "0.9.0"; then
+    print_info "Neovim $nvim_version ✓ (>= 0.9.0 required)"
+    return 0
+  else
+    print_error "Neovim $nvim_version found, but >= 0.9.0 is required"
+    return 1
+  fi
+}
+
+# Check Go version
+check_go_version() {
+  if ! command_exists go; then
+    return 1
+  fi
+  local go_version=$(go version | sed 's/go version go\([0-9.]*\).*/\1/')
+  if version_ge "$go_version" "1.21.0"; then
+    print_info "Go $go_version ✓ (>= 1.21 required)"
+    return 0
+  else
+    print_warn "Go $go_version found, but >= 1.21 is recommended"
+    return 1
+  fi
+}
+
+# Check Python version
+check_python_version() {
+  if ! command_exists python3; then
+    return 1
+  fi
+  local python_version=$(python3 --version 2>&1 | sed 's/Python \([0-9.]*\).*/\1/')
+  print_info "Python $python_version ✓"
+  return 0
+}
+
+# Check Node version
+check_node_version() {
+  if ! command_exists node; then
+    return 1
+  fi
+  local node_version=$(node --version | sed 's/v\([0-9.]*\).*/\1/')
+  print_info "Node $node_version ✓"
+  return 0
+}
+
 # Install dependencies based on detected package manager
 install_dependencies() {
   if [ "$SKIP_DEPS" = "true" ]; then
@@ -113,11 +168,43 @@ install_dependencies() {
 
   local pkg_manager=$(detect_package_manager)
   local missing_deps=()
+  local failed_version_checks=()
 
-  # Check for essential tools
+  # Check for essential tools with version requirements
+  if ! check_neovim_version; then
+    missing_deps+=("neovim")
+    failed_version_checks+=("neovim>=0.9.0")
+  fi
+
+  if ! check_go_version; then
+    missing_deps+=("golang")
+    failed_version_checks+=("golang>=1.21")
+  fi
+
+  if ! check_python_version; then
+    missing_deps+=("python3")
+  fi
+
+  if ! check_node_version; then
+    missing_deps+=("nodejs")
+  fi
+
+  # Check for core development tools
+  command_exists git || missing_deps+=("git")
+  command_exists make || missing_deps+=("make")
+  command_exists pip3 || missing_deps+=("pip3")
+  command_exists npm || missing_deps+=("npm")
+  command_exists cargo || missing_deps+=("cargo")
+  
+  # Check for essential CLI tools
   command_exists rg || missing_deps+=("ripgrep")
   command_exists fd || missing_deps+=("fd")
-  command_exists cargo || missing_deps+=("cargo")
+  command_exists lazygit || missing_deps+=("lazygit")
+  command_exists curl || missing_deps+=("curl")
+  command_exists wget || missing_deps+=("wget")
+  command_exists gzip || missing_deps+=("gzip")
+  command_exists tar || missing_deps+=("tar")
+  command_exists unzip || missing_deps+=("unzip")
 
   if [ ${#missing_deps[@]} -eq 0 ]; then
     print_info "All essential dependencies are already installed ✓"
@@ -131,6 +218,7 @@ install_dependencies() {
   fi
 
   print_warn "Missing dependencies: ${missing_deps[*]}"
+  [ ${#failed_version_checks[@]} -gt 0 ] && print_warn "Version requirements not met: ${failed_version_checks[*]}"
 
   if [ "$NON_INTERACTIVE" = "false" ]; then
     echo
@@ -149,9 +237,37 @@ install_dependencies() {
       sudo apt-get update
       for dep in "${missing_deps[@]}"; do
         case $dep in
+          neovim) sudo apt-get install -y software-properties-common && sudo add-apt-repository -y ppa:neovim-ppa/unstable && sudo apt-get update && sudo apt-get install -y neovim ;;
+          git) sudo apt-get install -y git ;;
+          make) sudo apt-get install -y build-essential ;;
+          python3) sudo apt-get install -y python3 ;;
+          pip3) sudo apt-get install -y python3-pip ;;
+          nodejs) sudo apt-get install -y nodejs npm ;;
+          npm) sudo apt-get install -y npm ;;
+          golang) 
+            print_info "Installing Go >= 1.21..."
+            wget -q https://go.dev/dl/go1.22.0.linux-amd64.tar.gz -O /tmp/go.tar.gz
+            sudo rm -rf /usr/local/go
+            sudo tar -C /usr/local -xzf /tmp/go.tar.gz
+            rm /tmp/go.tar.gz
+            export PATH=$PATH:/usr/local/go/bin
+            print_info "Go installed. Add 'export PATH=\$PATH:/usr/local/go/bin' to your ~/.bashrc"
+            ;;
+          cargo) sudo apt-get install -y cargo ;;
           ripgrep) sudo apt-get install -y ripgrep ;;
           fd) sudo apt-get install -y fd-find ;;
-          cargo) sudo apt-get install -y cargo ;;
+          lazygit) 
+            LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+            curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+            tar xf /tmp/lazygit.tar.gz -C /tmp lazygit
+            sudo install /tmp/lazygit /usr/local/bin
+            rm /tmp/lazygit /tmp/lazygit.tar.gz
+            ;;
+          curl) sudo apt-get install -y curl ;;
+          wget) sudo apt-get install -y wget ;;
+          gzip) sudo apt-get install -y gzip ;;
+          tar) sudo apt-get install -y tar ;;
+          unzip) sudo apt-get install -y unzip ;;
         esac
       done
       # Create fd symlink if needed on Debian/Ubuntu
@@ -166,9 +282,23 @@ install_dependencies() {
       print_info "Using dnf (Fedora)..."
       for dep in "${missing_deps[@]}"; do
         case $dep in
+          neovim) sudo dnf install -y neovim ;;
+          git) sudo dnf install -y git ;;
+          make) sudo dnf install -y make ;;
+          python3) sudo dnf install -y python3 ;;
+          pip3) sudo dnf install -y python3-pip ;;
+          nodejs) sudo dnf install -y nodejs npm ;;
+          npm) sudo dnf install -y npm ;;
+          golang) sudo dnf install -y golang ;;
+          cargo) sudo dnf install -y cargo ;;
           ripgrep) sudo dnf install -y ripgrep ;;
           fd) sudo dnf install -y fd-find ;;
-          cargo) sudo dnf install -y cargo ;;
+          lazygit) sudo dnf copr enable atim/lazygit -y && sudo dnf install -y lazygit ;;
+          curl) sudo dnf install -y curl ;;
+          wget) sudo dnf install -y wget ;;
+          gzip) sudo dnf install -y gzip ;;
+          tar) sudo dnf install -y tar ;;
+          unzip) sudo dnf install -y unzip ;;
         esac
       done
       ;;
@@ -176,9 +306,23 @@ install_dependencies() {
       print_info "Using pacman (Arch Linux)..."
       for dep in "${missing_deps[@]}"; do
         case $dep in
+          neovim) sudo pacman -S --noconfirm neovim ;;
+          git) sudo pacman -S --noconfirm git ;;
+          make) sudo pacman -S --noconfirm make ;;
+          python3) sudo pacman -S --noconfirm python ;;
+          pip3) sudo pacman -S --noconfirm python-pip ;;
+          nodejs) sudo pacman -S --noconfirm nodejs npm ;;
+          npm) sudo pacman -S --noconfirm npm ;;
+          golang) sudo pacman -S --noconfirm go ;;
+          cargo) sudo pacman -S --noconfirm rust ;;
           ripgrep) sudo pacman -S --noconfirm ripgrep ;;
           fd) sudo pacman -S --noconfirm fd ;;
-          cargo) sudo pacman -S --noconfirm rust ;;
+          lazygit) sudo pacman -S --noconfirm lazygit ;;
+          curl) sudo pacman -S --noconfirm curl ;;
+          wget) sudo pacman -S --noconfirm wget ;;
+          gzip) sudo pacman -S --noconfirm gzip ;;
+          tar) sudo pacman -S --noconfirm tar ;;
+          unzip) sudo pacman -S --noconfirm unzip ;;
         esac
       done
       ;;
@@ -186,9 +330,23 @@ install_dependencies() {
       print_info "Using Homebrew (macOS)..."
       for dep in "${missing_deps[@]}"; do
         case $dep in
+          neovim) brew install neovim ;;
+          git) brew install git ;;
+          make) brew install make ;;
+          python3) brew install python3 ;;
+          pip3) brew install python3 ;;
+          nodejs) brew install node ;;
+          npm) brew install node ;;
+          golang) brew install go ;;
+          cargo) brew install rust ;;
           ripgrep) brew install ripgrep ;;
           fd) brew install fd ;;
-          cargo) brew install rust ;;
+          lazygit) brew install lazygit ;;
+          curl) brew install curl ;;
+          wget) brew install wget ;;
+          gzip) brew install gzip ;;
+          tar) brew install gnu-tar ;;
+          unzip) brew install unzip ;;
         esac
       done
       ;;
@@ -196,9 +354,23 @@ install_dependencies() {
       print_info "Using zypper (openSUSE)..."
       for dep in "${missing_deps[@]}"; do
         case $dep in
+          neovim) sudo zypper install -y neovim ;;
+          git) sudo zypper install -y git ;;
+          make) sudo zypper install -y make ;;
+          python3) sudo zypper install -y python3 ;;
+          pip3) sudo zypper install -y python3-pip ;;
+          nodejs) sudo zypper install -y nodejs npm ;;
+          npm) sudo zypper install -y npm ;;
+          golang) sudo zypper install -y go ;;
+          cargo) sudo zypper install -y cargo ;;
           ripgrep) sudo zypper install -y ripgrep ;;
           fd) sudo zypper install -y fd ;;
-          cargo) sudo zypper install -y cargo ;;
+          lazygit) print_warn "lazygit not available in zypper, install manually from https://github.com/jesseduffield/lazygit" ;;
+          curl) sudo zypper install -y curl ;;
+          wget) sudo zypper install -y wget ;;
+          gzip) sudo zypper install -y gzip ;;
+          tar) sudo zypper install -y tar ;;
+          unzip) sudo zypper install -y unzip ;;
         esac
       done
       ;;
@@ -206,16 +378,35 @@ install_dependencies() {
       print_info "Using apk (Alpine Linux)..."
       for dep in "${missing_deps[@]}"; do
         case $dep in
+          neovim) sudo apk add neovim ;;
+          git) sudo apk add git ;;
+          make) sudo apk add make ;;
+          python3) sudo apk add python3 ;;
+          pip3) sudo apk add py3-pip ;;
+          nodejs) sudo apk add nodejs npm ;;
+          npm) sudo apk add npm ;;
+          golang) sudo apk add go ;;
+          cargo) sudo apk add cargo ;;
           ripgrep) sudo apk add ripgrep ;;
           fd) sudo apk add fd ;;
-          cargo) sudo apk add cargo ;;
+          lazygit) sudo apk add lazygit ;;
+          curl) sudo apk add curl ;;
+          wget) sudo apk add wget ;;
+          gzip) sudo apk add gzip ;;
+          tar) sudo apk add tar ;;
+          unzip) sudo apk add unzip ;;
         esac
       done
       ;;
     *)
-      print_error "Unknown package manager. Please install manually:"
-      print_error "  - ripgrep: https://github.com/BurntSushi/ripgrep"
-      print_error "  - fd: https://github.com/sharkdp/fd"
+      print_error "Unknown package manager. Please install the following manually:"
+      print_error "  - neovim >= 0.9.0"
+      print_error "  - git, make, curl, wget, gzip, tar, unzip"
+      print_error "  - python3, pip3"
+      print_error "  - nodejs, npm"
+      print_error "  - golang >= 1.21"
+      print_error "  - cargo (rust)"
+      print_error "  - ripgrep, fd, lazygit"
       return 1
       ;;
   esac

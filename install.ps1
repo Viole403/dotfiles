@@ -90,6 +90,78 @@ function Test-CommandExists {
     return [bool](Get-Command $Command -ErrorAction SilentlyContinue)
 }
 
+# Version comparison helper
+function Test-VersionGreaterOrEqual {
+    param([string]$Version1, [string]$Version2)
+    return [version]$Version1 -ge [version]$Version2
+}
+
+# Check Neovim version
+function Test-NeovimVersion {
+    if (-not (Test-CommandExists "nvim")) {
+        return $false
+    }
+    try {
+        $nvimVersion = (nvim --version | Select-Object -First 1) -replace 'NVIM v([0-9.]+).*', '$1'
+        if (Test-VersionGreaterOrEqual $nvimVersion "0.9.0") {
+            Write-Info "Neovim $nvimVersion ✓ (>= 0.9.0 required)"
+            return $true
+        } else {
+            Write-Error "Neovim $nvimVersion found, but >= 0.9.0 is required"
+            return $false
+        }
+    } catch {
+        return $false
+    }
+}
+
+# Check Go version
+function Test-GoVersion {
+    if (-not (Test-CommandExists "go")) {
+        return $false
+    }
+    try {
+        $goVersion = (go version) -replace 'go version go([0-9.]+).*', '$1'
+        if (Test-VersionGreaterOrEqual $goVersion "1.21.0") {
+            Write-Info "Go $goVersion ✓ (>= 1.21 required)"
+            return $true
+        } else {
+            Write-Warn "Go $goVersion found, but >= 1.21 is recommended"
+            return $false
+        }
+    } catch {
+        return $false
+    }
+}
+
+# Check Python version
+function Test-PythonVersion {
+    if (-not (Test-CommandExists "python")) {
+        return $false
+    }
+    try {
+        $pythonVersion = (python --version 2>&1) -replace 'Python ([0-9.]+).*', '$1'
+        Write-Info "Python $pythonVersion ✓"
+        return $true
+    } catch {
+        return $false
+    }
+}
+
+# Check Node version
+function Test-NodeVersion {
+    if (-not (Test-CommandExists "node")) {
+        return $false
+    }
+    try {
+        $nodeVersion = (node --version) -replace 'v([0-9.]+).*', '$1'
+        Write-Info "Node $nodeVersion ✓"
+        return $true
+    } catch {
+        return $false
+    }
+}
+
 # Install dependencies
 function Install-Dependencies {
     if ($SkipDeps) {
@@ -101,11 +173,43 @@ function Install-Dependencies {
 
     $pkgManager = Get-PackageManager
     $missingDeps = @()
+    $failedVersionChecks = @()
 
-    # Check for essential tools
+    # Check for essential tools with version requirements
+    if (-not (Test-NeovimVersion)) {
+        $missingDeps += "neovim"
+        $failedVersionChecks += "neovim>=0.9.0"
+    }
+
+    if (-not (Test-GoVersion)) {
+        $missingDeps += "golang"
+        $failedVersionChecks += "golang>=1.21"
+    }
+
+    if (-not (Test-PythonVersion)) {
+        $missingDeps += "python"
+    }
+
+    if (-not (Test-NodeVersion)) {
+        $missingDeps += "nodejs"
+    }
+
+    # Check for core development tools
+    if (-not (Test-CommandExists "git")) { $missingDeps += "git" }
+    if (-not (Test-CommandExists "make")) { $missingDeps += "make" }
+    if (-not (Test-CommandExists "pip")) { $missingDeps += "pip" }
+    if (-not (Test-CommandExists "npm")) { $missingDeps += "npm" }
+    if (-not (Test-CommandExists "cargo")) { $missingDeps += "cargo" }
+    
+    # Check for essential CLI tools
     if (-not (Test-CommandExists "rg")) { $missingDeps += "ripgrep" }
     if (-not (Test-CommandExists "fd")) { $missingDeps += "fd" }
-    if (-not (Test-CommandExists "cargo")) { $missingDeps += "cargo" }
+    if (-not (Test-CommandExists "lazygit")) { $missingDeps += "lazygit" }
+    if (-not (Test-CommandExists "curl")) { $missingDeps += "curl" }
+    if (-not (Test-CommandExists "wget")) { $missingDeps += "wget" }
+    if (-not (Test-CommandExists "gzip")) { $missingDeps += "gzip" }
+    if (-not (Test-CommandExists "tar")) { $missingDeps += "tar" }
+    if (-not (Test-CommandExists "7z")) { $missingDeps += "7zip" }
 
     if ($missingDeps.Count -eq 0) {
         Write-Info "All essential dependencies are already installed ✓"
@@ -119,15 +223,27 @@ function Install-Dependencies {
     }
 
     Write-Warn "Missing dependencies: $($missingDeps -join ', ')"
+    if ($failedVersionChecks.Count -gt 0) {
+        Write-Warn "Version requirements not met: $($failedVersionChecks -join ', ')"
+    }
 
     if ($pkgManager -eq "none") {
         Write-Error "No package manager detected (scoop/chocolatey/winget)."
         Write-Host "Please install one:"
-        Write-Host "  • Scoop: https://scoop.sh"
+        Write-Host "  • Scoop (recommended): https://scoop.sh"
         Write-Host "  • Chocolatey: https://chocolatey.org"
+        Write-Host "  • Winget (built-in Windows 10/11)"
+        Write-Host ""
         Write-Host "Or install manually:"
+        Write-Host "  • Neovim >= 0.9.0: https://neovim.io"
+        Write-Host "  • Git: https://git-scm.com"
+        Write-Host "  • Python 3: https://python.org"
+        Write-Host "  • Node.js: https://nodejs.org"
+        Write-Host "  • Go >= 1.21: https://go.dev"
+        Write-Host "  • Rust/Cargo: https://rustup.rs"
         Write-Host "  • ripgrep: https://github.com/BurntSushi/ripgrep/releases"
         Write-Host "  • fd: https://github.com/sharkdp/fd/releases"
+        Write-Host "  • lazygit: https://github.com/jesseduffield/lazygit/releases"
         return
     }
 
@@ -145,27 +261,69 @@ function Install-Dependencies {
         "scoop" {
             foreach ($dep in $missingDeps) {
                 switch ($dep) {
+                    "neovim" { scoop install neovim }
+                    "git" { scoop install git }
+                    "make" { scoop install make }
+                    "python" { scoop install python }
+                    "pip" { Write-Info "pip comes with Python" }
+                    "nodejs" { scoop install nodejs }
+                    "npm" { Write-Info "npm comes with Node.js" }
+                    "golang" { scoop install go }
+                    "cargo" { scoop install rust }
                     "ripgrep" { scoop install ripgrep }
                     "fd" { scoop install fd }
-                    "cargo" { scoop install rust }
+                    "lazygit" { scoop install lazygit }
+                    "curl" { scoop install curl }
+                    "wget" { scoop install wget }
+                    "gzip" { scoop install gzip }
+                    "tar" { scoop install tar }
+                    "7zip" { scoop install 7zip }
                 }
             }
         }
         "choco" {
             foreach ($dep in $missingDeps) {
                 switch ($dep) {
+                    "neovim" { choco install neovim -y }
+                    "git" { choco install git -y }
+                    "make" { choco install make -y }
+                    "python" { choco install python -y }
+                    "pip" { Write-Info "pip comes with Python" }
+                    "nodejs" { choco install nodejs -y }
+                    "npm" { Write-Info "npm comes with Node.js" }
+                    "golang" { choco install golang -y }
+                    "cargo" { choco install rust -y }
                     "ripgrep" { choco install ripgrep -y }
                     "fd" { choco install fd -y }
-                    "cargo" { choco install rust -y }
+                    "lazygit" { choco install lazygit -y }
+                    "curl" { choco install curl -y }
+                    "wget" { choco install wget -y }
+                    "gzip" { choco install gzip -y }
+                    "tar" { choco install tar -y }
+                    "7zip" { choco install 7zip -y }
                 }
             }
         }
         "winget" {
             foreach ($dep in $missingDeps) {
                 switch ($dep) {
+                    "neovim" { winget install Neovim.Neovim --silent }
+                    "git" { winget install Git.Git --silent }
+                    "make" { winget install GnuWin32.Make --silent }
+                    "python" { winget install Python.Python.3.11 --silent }
+                    "pip" { Write-Info "pip comes with Python" }
+                    "nodejs" { winget install OpenJS.NodeJS --silent }
+                    "npm" { Write-Info "npm comes with Node.js" }
+                    "golang" { winget install GoLang.Go --silent }
+                    "cargo" { winget install Rustlang.Rust.MSVC --silent }
                     "ripgrep" { winget install BurntSushi.ripgrep.MSVC --silent }
                     "fd" { winget install sharkdp.fd --silent }
-                    "cargo" { winget install Rustlang.Rust.MSVC --silent }
+                    "lazygit" { winget install JesseDuffield.lazygit --silent }
+                    "curl" { Write-Info "curl is built into Windows 10+" }
+                    "wget" { winget install JernejSimoncic.Wget --silent }
+                    "gzip" { Write-Info "Use 7zip for compression" }
+                    "tar" { Write-Info "tar is built into Windows 10+" }
+                    "7zip" { winget install 7zip.7zip --silent }
                 }
             }
         }
