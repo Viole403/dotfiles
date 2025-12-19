@@ -6,9 +6,22 @@ return {
     "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
-    require("mason").setup()
+    -- Suppress deprecation warnings
+    local notify = vim.notify
+    vim.notify = function(msg, ...)
+      if msg:match("lspconfig") and msg:match("deprecated") then
+        return
+      end
+      notify(msg, ...)
+    end
 
-    require("mason-lspconfig").setup({
+    local ok_mason, mason = pcall(require, "mason")
+    if not ok_mason then return end
+    mason.setup()
+
+    local ok_mason_lsp, mason_lspconfig = pcall(require, "mason-lspconfig")
+    if not ok_mason_lsp then return end
+    mason_lspconfig.setup({
       ensure_installed = {
         "lua_ls",
         "pyright",
@@ -20,8 +33,11 @@ return {
       },
     })
 
-    local lspconfig = require("lspconfig")
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local ok_lsp, lspconfig = pcall(require, "lspconfig")
+    if not ok_lsp then return end
+
+    local ok_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+    local capabilities = ok_cmp and cmp_nvim_lsp.default_capabilities() or {}
 
     local servers = {
       "lua_ls",
@@ -38,6 +54,9 @@ return {
         capabilities = capabilities,
       })
     end
+
+    -- Restore original notify
+    vim.notify = notify
 
     vim.keymap.set("n", "gd", vim.lsp.buf.definition)
     vim.keymap.set("n", "gr", vim.lsp.buf.references)
