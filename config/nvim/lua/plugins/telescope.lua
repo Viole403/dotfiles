@@ -1,6 +1,5 @@
 return {
   "nvim-telescope/telescope.nvim",
-  tag = "v0.2.0",
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
@@ -24,7 +23,7 @@ return {
     map("n", "<leader>ff", "<cmd>Telescope find_files<CR>")
     map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>")
     map("n", "<leader>fb", "<cmd>Telescope buffers<CR>")
-    map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>")
     map("n", "<leader>pd", "<cmd>Telescope projects<CR>")
+    map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>")
   end,
 }
