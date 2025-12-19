@@ -195,6 +195,7 @@ install_dependencies() {
   command_exists pip3 || missing_deps+=("pip3")
   command_exists npm || missing_deps+=("npm")
   command_exists cargo || missing_deps+=("cargo")
+  command_exists composer || missing_deps+=("composer")
 
   # Check for essential CLI tools
   command_exists rg || missing_deps+=("ripgrep")
@@ -419,6 +420,41 @@ install_dependencies() {
     cargo install --locked code-minimap
     print_info "code-minimap installed ✓"
   fi
+
+  # Install formatter tools (none-ls requirements)
+  print_step "Installing formatter tools for none-ls..."
+
+  # prettierd (JS/TS/Astro/React/Next/Bun)
+  if command_exists npm && ! command_exists prettierd; then
+    print_info "Installing prettierd..."
+    npm install -g @fsouza/prettierd
+  fi
+
+  # gofumpt and goimports (Go)
+  if command_exists go; then
+    if ! command -v gofumpt >/dev/null 2>&1; then
+      print_info "Installing gofumpt..."
+      go install mvdan.cc/gofumpt@latest
+    fi
+    if ! command -v goimports >/dev/null 2>&1; then
+      print_info "Installing goimports..."
+      go install golang.org/x/tools/cmd/goimports@latest
+    fi
+  fi
+
+  # black (Python)
+  if command_exists pip3 && ! command -v black >/dev/null 2>&1; then
+    print_info "Installing black..."
+    pip3 install --user black
+  fi
+
+  # php-cs-fixer (PHP)
+  if command_exists composer && ! command -v php-cs-fixer >/dev/null 2>&1; then
+    print_info "Installing php-cs-fixer..."
+    composer global require friendsofphp/php-cs-fixer
+  fi
+
+  print_info "Formatter tools installation complete ✓"
 }
 
 # Install optional dependencies

@@ -200,6 +200,7 @@ function Install-Dependencies {
     if (-not (Test-CommandExists "pip")) { $missingDeps += "pip" }
     if (-not (Test-CommandExists "npm")) { $missingDeps += "npm" }
     if (-not (Test-CommandExists "cargo")) { $missingDeps += "cargo" }
+    if (-not (Test-CommandExists "composer")) { $missingDeps += "composer" }
 
     # Check for essential CLI tools
     if (-not (Test-CommandExists "rg")) { $missingDeps += "ripgrep" }
@@ -340,6 +341,41 @@ function Install-Dependencies {
         cargo install --locked code-minimap
         Write-Info "code-minimap installed ✓"
     }
+
+    # Install formatter tools (none-ls requirements)
+    Write-Step "Installing formatter tools for none-ls..."
+
+    # prettierd (JS/TS/Astro/React/Next/Bun)
+    if ((Test-CommandExists "npm") -and -not (Test-CommandExists "prettierd")) {
+        Write-Info "Installing prettierd..."
+        npm install -g @fsouza/prettierd
+    }
+
+    # gofumpt and goimports (Go)
+    if (Test-CommandExists "go") {
+        if (-not (Get-Command gofumpt -ErrorAction SilentlyContinue)) {
+            Write-Info "Installing gofumpt..."
+            go install mvdan.cc/gofumpt@latest
+        }
+        if (-not (Get-Command goimports -ErrorAction SilentlyContinue)) {
+            Write-Info "Installing goimports..."
+            go install golang.org/x/tools/cmd/goimports@latest
+        }
+    }
+
+    # black (Python)
+    if ((Test-CommandExists "pip") -and -not (Get-Command black -ErrorAction SilentlyContinue)) {
+        Write-Info "Installing black..."
+        pip install --user black
+    }
+
+    # php-cs-fixer (PHP)
+    if ((Test-CommandExists "composer") -and -not (Get-Command php-cs-fixer -ErrorAction SilentlyContinue)) {
+        Write-Info "Installing php-cs-fixer..."
+        composer global require friendsofphp/php-cs-fixer
+    }
+
+    Write-Info "Formatter tools installation complete ✓"
 }
 
 # Detect dotfiles directory

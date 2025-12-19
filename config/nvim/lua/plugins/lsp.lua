@@ -16,21 +16,16 @@ return {
     mason_lspconfig.setup({
       -- Core LSP servers synchronized with lvim
       ensure_installed = {
-        "lua_ls",
-        "pyright",
-        "gopls",
-        "ts_ls",
+        "lua_ls",       -- Lua
+        "pyright",      -- Python
+        "gopls",        -- Go
+        "ts_ls",        -- JavaScript / TypeScript / Bun
+        "astro",        -- Astro
+        "rust_analyzer",-- Rust
+        "intelephense", -- PHP
         "html",
         "cssls",
         "jsonls",
-        -- Additional tools
-        "biome",
-        "deno",
-        "editorconfig-checker",
-        "goimport",
-        "gofumpt",
-        "golines",
-        "mdformat",
       },
     })
 
@@ -45,6 +40,9 @@ return {
       "pyright",
       "gopls",
       "ts_ls",
+      "astro",
+      "rust_analyzer",
+      "intelephense",
       "html",
       "cssls",
       "jsonls",
