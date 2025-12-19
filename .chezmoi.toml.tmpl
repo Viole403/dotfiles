@@ -1,0 +1,15 @@
+{{- $editorChoice := "both" -}}
+{{- if stdinIsATTY -}}
+{{-   $editorChoice = promptString "Which editor config to install? (nvim/lvim/both)" "both" -}}
+{{- end -}}
+
+[data]
+    email = {{ promptStringOnce . "email" "Email address" | quote }}
+    editor_choice = {{ $editorChoice | quote }}
+    install_nvim = {{ or (eq $editorChoice "nvim") (eq $editorChoice "both") }}
+    install_lvim = {{ or (eq $editorChoice "lvim") (eq $editorChoice "both") }}
+
+{{- if eq .chezmoi.os "windows" }}
+[cd]
+    command = "pwsh"
+{{- end }}

@@ -1,0 +1,9 @@
+README.md
+LICENSE
+INSTALL.md
+CHEZMOI.md
+install.sh
+install.ps1
+.git/
+.gitignore
+.chezmoiignore
