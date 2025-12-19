@@ -1,4 +1,5 @@
-require("lazy").setup({
+-- Return plugin specs for lazy.nvim to load
+return {
   require("plugins.lualine"),
   require("plugins.nvimtree"),
   require("plugins.treesitter"),
@@ -36,4 +37,4 @@ require("lazy").setup({
       vim.cmd.colorscheme("catppuccin")
     end,
   },
-})
+}
