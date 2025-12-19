@@ -354,6 +354,7 @@ lvim.plugins = {
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
     },
+    ft = "http", -- Only load for .http files
     config = function()
       require("rest-nvim").setup({
         result_split_horizontal = false,
