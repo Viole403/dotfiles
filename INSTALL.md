@@ -12,103 +12,141 @@ You can choose between:
 ### Required
 
 - **Git** - Version control
-- **Neovim** (>= 0.9) - The editor. For LunarVim: <https://www.lunarvim.org>
+- **Neovim** (>= 0.9.0) - The editor. For LunarVim: <https://www.lunarvim.org>
+- **Make** - Build automation tool
 - **Nerd Font** - Icons in statusline/tree. See <https://www.nerdfonts.com/>
 
-### Highly Recommended (for Telescope)
+### Core Development Tools (Auto-installed by scripts)
 
-- **`ripgrep`** - Fast grep alternative (required for `:Telescope live_grep`)
-- **`fd`** - Fast find alternative (improves `:Telescope find_files`)
+- **Python 3** + `pip` - For Python LSP and plugins
+- **Node.js** + `npm` - For LSP servers (tsserver, etc.)
+- **Go** (>= 1.21) - For Go LSP and tools
+- **Rust/Cargo** - For Rust LSP and tools like `code-minimap`
+
+### Essential CLI Tools (Auto-installed by scripts)
+
+- **`ripgrep`** - Fast grep (required for `:Telescope live_grep`)
+- **`fd`** - Fast find (improves `:Telescope find_files`)
+- **`lazygit`** - Git UI inside Neovim
+- **`curl`** / **`wget`** - Download tools
+- **`gzip`** / **`tar`** / **`unzip`** / **`7zip`** - Archive utilities
+- **`code-minimap`** - Code minimap sidebar (via cargo)
 
 ### Optional
 
-- **Python 3** + `pynvim` - For Python plugins
-- **Node.js** + `npm` - For some LSP servers and plugins
-- **Tree-sitter CLI** - For advanced syntax highlighting
 - **Chezmoi** (>= 2.0) - For advanced dotfile management (auto-installed by scripts)
+- **Tree-sitter CLI** - For advanced syntax highlighting (auto-managed by plugins)
 
 ## Installing Dependencies
 
-> **💡 Tip**: The install scripts ([install.sh](install.sh) / [install.ps1](install.ps1)) automatically install these dependencies for you. This section is for manual installation only.
+> **💡 Tip**: The install scripts ([install.sh](install.sh) / [install.ps1](install.ps1)) automatically detect, validate, and install all required dependencies for you, including version checks for Neovim (>= 0.9.0) and Go (>= 1.21). This section is for manual installation only.
 
-### Linux
+### Automated Installation
+
+The provided installation scripts automatically:
+
+- ✅ Check for Neovim >= 0.9.0 and Go >= 1.21
+- ✅ Detect your package manager (apt, dnf, pacman, brew, scoop, choco, winget)
+- ✅ Install missing core tools: git, make, python3, pip, nodejs, npm, golang, rust/cargo
+- ✅ Install essential CLI tools: ripgrep, fd, lazygit, curl, wget, gzip, tar, unzip
+- ✅ Install code-minimap via cargo
+- ✅ Create symlinks or use chezmoi for dotfile management
+
+### Manual Installation (Linux)
 
 **Ubuntu/Debian**:
 
 ```bash
-# Essential tools
-sudo apt install git neovim ripgrep fd-find
+# Core development tools
+sudo apt install git make neovim python3 python3-pip nodejs npm golang cargo
 
-# Optional
-sudo apt install python3-pip nodejs npm
-pip3 install --user pynvim
-npm install -g tree-sitter-cli
+# Essential CLI tools
+sudo apt install ripgrep fd-find lazygit curl wget gzip tar unzip
+
+# Install code-minimap
+cargo install --locked code-minimap
 ```
 
 **Arch Linux**:
 
 ```bash
-# Essential
-sudo pacman -S git neovim ripgrep fd
+# Core development tools
+sudo pacman -S git make neovim python python-pip nodejs npm go rust
 
-# Optional
-sudo pacman -S python-pip nodejs npm
-pip install --user pynvim
-npm install -g tree-sitter-cli
+# Essential CLI tools
+sudo pacman -S ripgrep fd lazygit curl wget gzip tar unzip
+
+# Install code-minimap
+cargo install --locked code-minimap
 ```
 
 **Fedora**:
 
 ```bash
-# Essential
-sudo dnf install git neovim ripgrep fd-find
+# Core development tools
+sudo dnf install git make neovim python3 python3-pip nodejs npm golang cargo
 
-# Optional
-sudo dnf install python3-pip nodejs
-pip3 install --user pynvim
-npm install -g tree-sitter-cli
+# Essential CLI tools
+sudo dnf install ripgrep fd-find curl wget gzip tar unzip
+sudo dnf copr enable atim/lazygit -y && sudo dnf install lazygit
+
+# Install code-minimap
+cargo install --locked code-minimap
 ```
 
-### macOS
+### Manual Installation (macOS)
 
 ```bash
 # Using Homebrew (install from https://brew.sh)
-brew install git neovim ripgrep fd
+# Core development tools
+brew install git make neovim python3 node go rust
 
-# Optional
-brew install python node
-pip3 install pynvim
-npm install -g tree-sitter-cli
+# Essential CLI tools
+brew install ripgrep fd lazygit curl wget gzip gnu-tar unzip
+
+# Install code-minimap
+cargo install --locked code-minimap
 ```
 
-### Windows
+### Manual Installation (Windows)
 
 **Using Scoop** (recommended - <https://scoop.sh>):
 
 ```powershell
-scoop install git neovim ripgrep fd
+# Core development tools
+scoop install git make neovim python nodejs golang rust
 
-# Optional
-scoop install python nodejs
-pip install pynvim
-npm install -g tree-sitter-cli
+# Essential CLI tools
+scoop install ripgrep fd lazygit curl wget gzip tar 7zip
+
+# Install code-minimap
+cargo install --locked code-minimap
 ```
 
 **Using Chocolatey** (<https://chocolatey.org>):
 
 ```powershell
-choco install git neovim ripgrep fd
+# Core development tools
+choco install git make neovim python nodejs golang rust -y
 
-# Optional
-choco install python nodejs
-pip install pynvim
-npm install -g tree-sitter-cli
+# Essential CLI tools
+choco install ripgrep fd lazygit curl wget gzip tar 7zip -y
+
+# Install code-minimap
+cargo install --locked code-minimap
 ```
 
-**Using winget** (built-in Windows):
+**Using winget** (built-in Windows 10/11):
 
 ```powershell
-winget install Git.Git Neovim.Neovim BurntSushi.ripgrep.MSVC sharkdp.fd
+# Core development tools
+winget install Git.Git Neovim.Neovim GnuWin32.Make Python.Python.3.11 OpenJS.NodeJS GoLang.Go Rustlang.Rust.MSVC --silent
+
+# Essential CLI tools
+winget install BurntSushi.ripgrep.MSVC sharkdp.fd JesseDuffield.lazygit JernejSimoncic.Wget 7zip.7zip --silent
+
+# Install code-minimap (curl and tar are built into Windows 10+)
+cargo install --locked code-minimap
 ```
 
 ## Quick Install Methods
