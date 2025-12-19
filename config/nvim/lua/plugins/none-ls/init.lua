@@ -14,8 +14,8 @@ null_ls.setup({
   end,
 })
 
-require("none-ls.web")
-require("none-ls.php")
-require("none-ls.go")
-require("none-ls.rust")
-require("none-ls.python")
+require("plugins.none-ls.web")
+require("plugins.none-ls.php")
+require("plugins.none-ls.go")
+require("plugins.none-ls.rust")
+require("plugins.none-ls.python")

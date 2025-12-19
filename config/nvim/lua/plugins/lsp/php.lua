@@ -1,5 +1,5 @@
 local lsp = require("lspconfig")
-local c = require("lsp.common")
+local c = require("plugins.lsp.common")
 
 lsp.intelephense.setup({
   capabilities = c.capabilities,
