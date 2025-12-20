@@ -454,7 +454,42 @@ install_dependencies() {
 
   # Auto-install tree-sitter-cli if cargo is available
   if command_exists cargo && ! command_exists tree-sitter; then
-    print_info "Installing tree-sitter-cli..."
+    print_info "Installing tree-sitter-cli (requires clang/llvm)..."
+
+    # Check and install clang/llvm/libclang-dev for tree-sitter-cli compilation
+    local needs_clang=false
+    if ! command_exists clang; then
+      needs_clang=true
+    fi
+
+    if [ "$needs_clang" = "true" ]; then
+      print_info "Installing clang and llvm (required for tree-sitter-cli)..."
+      case $pkg_manager in
+        apt)
+          sudo apt-get install -y clang llvm libclang-dev
+          ;;
+        dnf)
+          sudo dnf install -y clang llvm libclang-devel
+          ;;
+        pacman)
+          sudo pacman -S --noconfirm clang llvm
+          ;;
+        brew)
+          brew install llvm
+          ;;
+        zypper)
+          sudo zypper install -y clang llvm libclang-devel
+          ;;
+        apk)
+          sudo apk add clang llvm libclang-dev
+          ;;
+        *)
+          print_warn "Unable to auto-install clang/llvm. Please install manually."
+          print_warn "For tree-sitter-cli, you need: clang, llvm, and libclang-dev (or equivalent)"
+          ;;
+      esac
+    fi
+
     cargo install --locked tree-sitter-cli
     print_info "tree-sitter-cli installed ✓"
   elif command_exists npm && ! command_exists tree-sitter; then

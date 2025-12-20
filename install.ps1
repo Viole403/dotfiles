@@ -369,7 +369,34 @@ function Install-Dependencies {
 
     # Auto-install tree-sitter-cli if cargo is available
     if ((Test-CommandExists "cargo") -and -not (Test-CommandExists "tree-sitter")) {
-        Write-Info "Installing tree-sitter-cli..."
+        Write-Info "Installing tree-sitter-cli (requires LLVM on Windows)..."
+
+        # Check for LLVM/Clang (required for tree-sitter-cli compilation on Windows)
+        $needsLLVM = -not (Test-CommandExists "clang")
+
+        if ($needsLLVM) {
+            Write-Info "Installing LLVM (required for tree-sitter-cli)..."
+            switch ($pkgManager) {
+                "scoop" {
+                    scoop install llvm
+                }
+                "choco" {
+                    choco install llvm -y
+                }
+                "winget" {
+                    winget install LLVM.LLVM --silent
+                }
+                default {
+                    Write-Warn "Unable to auto-install LLVM. Please install manually from https://releases.llvm.org/"
+                    Write-Warn "tree-sitter-cli requires LLVM/Clang to compile on Windows"
+                }
+            }
+
+            # Refresh PATH after LLVM installation
+            $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH", "User")
+        }
+
+        Write-Info "Installing tree-sitter-cli via cargo..."
         cargo install --locked tree-sitter-cli
         Write-Info "tree-sitter-cli installed ✓"
     } elseif ((Test-CommandExists "npm") -and -not (Test-CommandExists "tree-sitter")) {

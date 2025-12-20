@@ -27,6 +27,7 @@ Personally, I use `Fira Code` + `Symbols Nerd Font`.
 - [`lazygit`](https://github.com/jesseduffield/lazygit) - Git UI in terminal
 - `curl`, `wget`, `gzip`, `tar`, `unzip` - Download and archive utilities
 - `code-minimap` - Code minimap sidebar (via cargo)
+- `tree-sitter-cli` - Syntax tree parser (via cargo)
 
 Here's the list of what included in this dotfiles:
 
