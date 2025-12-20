@@ -1,3 +1,4 @@
+-- config/nvim/lua/plugins/lsp/common.lua
 local M = {}
 
 M.capabilities =

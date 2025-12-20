@@ -1,3 +1,4 @@
+-- config/nvim/lua/plugins/lsp/web.lua
 local lsp = require("lspconfig")
 local c = require("plugins.lsp.common")
 
