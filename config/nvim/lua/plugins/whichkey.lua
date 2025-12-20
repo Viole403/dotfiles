@@ -8,6 +8,10 @@ return {
   end,
   opts = {
     preset = "modern",
+    -- Sort mappings alphabetically and by groups
+    sort = { "alphanum", "group", "local", "order", "mod" },
+    -- Expand all groups to show all keymaps
+    expand = 1000, -- Show all mappings (very high number)
     icons = {
       breadcrumb = "»",
       separator = "➜",
@@ -47,52 +51,114 @@ return {
     },
     show_help = true,
     show_keys = true,
+    -- Enable hydra mode for sticky key sequences
     triggers = {
       { "<auto>", mode = "nxsot" },
     },
-    -- Define keymap groups and categories
+    -- Defer showing popup for visual/visual-block mode (hydra mode)
+    defer = function(ctx)
+      return ctx.mode == "V" or ctx.mode == "<C-V>"
+    end,
+    -- Define keymap groups and categories (sorted alphabetically)
     spec = {
-      -- File & Find Operations
-      { "<leader>f", group = "Find" },
-      { "<leader>ff", desc = "Find files" },
-      { "<leader>fg", desc = "Live grep" },
-      { "<leader>fb", desc = "Find buffers" },
-      { "<leader>fh", desc = "Find help tags" },
-      { "<leader>ft", desc = "Find todos" },
+      -- ==================== LEADER KEY GROUPS ====================
 
       -- Buffer Operations
       { "<leader>b", group = "Buffer" },
       { "<leader>bd", desc = "Delete buffer" },
       { "<leader>bp", desc = "Pick buffer" },
-      { "<Tab>", desc = "Next buffer" },
-      { "<S-Tab>", desc = "Previous buffer" },
+
+      -- Code & LSP Operations
+      { "<leader>c", group = "Code" },
+      { "<leader>ca", desc = "Code actions" },
+      { "<leader>cl", desc = "LSP Definitions" },
+      { "<leader>cs", desc = "Symbols (Trouble)" },
+
+      -- Database UI
+      { "<leader>d", group = "Database" },
 
       -- File Explorer
       { "<leader>e", desc = "Toggle file explorer" },
 
-      -- Project Management
-      { "<leader>p", group = "Project" },
-      { "<leader>pd", desc = "Find projects" },
+      -- Find Operations (Telescope)
+      { "<leader>f", group = "Find" },
+      { "<leader>fb", desc = "Find buffers" },
+      { "<leader>ff", desc = "Find files" },
+      { "<leader>fg", desc = "Live grep" },
+      { "<leader>fh", desc = "Find help tags" },
+      { "<leader>ft", desc = "Find todos" },
 
-      -- LSP Operations
-      { "<leader>r", group = "Refactor" },
-      { "<leader>rn", desc = "Rename symbol" },
-      { "<leader>c", group = "Code" },
-      { "<leader>ca", desc = "Code actions" },
-      { "gd", desc = "Go to definition" },
-      { "gr", desc = "Go to references" },
-      { "K", desc = "Hover documentation" },
+      -- Git Hunk Operations
+      { "<leader>h", group = "Git Hunk" },
+      { "<leader>hb", desc = "Blame line" },
+      { "<leader>hd", desc = "Diff this" },
+      { "<leader>hD", desc = "Diff this ~" },
+      { "<leader>hp", desc = "Preview hunk" },
+      { "<leader>hq", desc = "Set qflist" },
+      { "<leader>hQ", desc = "Set qflist (all)" },
+      { "<leader>hr", desc = "Reset hunk" },
+      { "<leader>hR", desc = "Reset buffer" },
+      { "<leader>hs", desc = "Stage hunk" },
+      { "<leader>hS", desc = "Stage buffer" },
 
       -- Minimap
       { "<leader>m", group = "Minimap" },
       { "<leader>mm", desc = "Toggle minimap" },
 
-      -- Todo Navigation
-      { "]t", desc = "Next todo" },
-      { "[t", desc = "Previous todo" },
+      -- Project Management
+      { "<leader>p", group = "Project" },
+      { "<leader>pd", desc = "Find projects" },
+
+      -- Refactor Operations
+      { "<leader>r", group = "Refactor" },
+      { "<leader>rn", desc = "Rename symbol" },
+
+      -- Toggle Operations
+      { "<leader>t", group = "Toggle" },
+      { "<leader>tb", desc = "Toggle line blame" },
+      { "<leader>tw", desc = "Toggle word diff" },
+
+      -- Trouble (Diagnostics)
+      { "<leader>x", group = "Diagnostics" },
+      { "<leader>xL", desc = "Location List" },
+      { "<leader>xQ", desc = "Quickfix List" },
+      { "<leader>xx", desc = "Diagnostics (Trouble)" },
+      { "<leader>xX", desc = "Buffer Diagnostics" },
+
+      -- Which-Key Helper
+      { "<leader>?", desc = "Buffer local keymaps" },
+
+      -- ==================== NON-LEADER KEYS ====================
+
+      -- Buffer Navigation
+      { "<Tab>", desc = "Next buffer" },
+      { "<S-Tab>", desc = "Previous buffer" },
 
       -- Terminal
       { "<A-`>", desc = "Toggle terminal" },
+
+      -- Autopairs Fast Wrap
+      { "<M-e>", desc = "Fast wrap (autopairs)", mode = "i" },
+
+      -- Flash Navigation
+      { "s", desc = "Flash jump", mode = { "n", "x", "o" } },
+      { "S", desc = "Flash Treesitter", mode = { "n", "x", "o" } },
+      { "r", desc = "Remote Flash", mode = "o" },
+      { "R", desc = "Treesitter Search", mode = { "o", "x" } },
+      { "<c-s>", desc = "Toggle Flash Search", mode = "c" },
+
+      -- LSP Operations
+      { "gd", desc = "Go to definition" },
+      { "gr", desc = "Go to references" },
+      { "K", desc = "Hover documentation" },
+
+      -- Git Hunk Navigation
+      { "]c", desc = "Next git hunk" },
+      { "[c", desc = "Previous git hunk" },
+
+      -- Todo Navigation
+      { "]t", desc = "Next todo" },
+      { "[t", desc = "Previous todo" },
 
       -- Tmux Navigation
       { "<C-h>", desc = "Navigate left (Tmux)" },
@@ -101,21 +167,9 @@ return {
       { "<C-l>", desc = "Navigate right (Tmux)" },
       { "<C-\\>", desc = "Navigate last active (Tmux)" },
 
-      -- System Operations
-      { "<C-S-c>", desc = "Copy to system clipboard", mode = "v" },
-      { "<C-S-v>", desc = "Paste from system clipboard", mode = { "n", "i" } },
-
-      -- Git Operations (from gitsigns - typical mappings)
-      { "<leader>h", group = "Git Hunk" },
-      { "<leader>t", group = "Toggle" },
-      { "]c", desc = "Next git hunk" },
-      { "[c", desc = "Previous git hunk" },
-
-      -- Database UI
-      { "<leader>d", group = "Database" },
-
-      -- Which-Key Helper
-      { "<leader>?", desc = "Buffer local keymaps" },
+      -- System Clipboard
+      { "<C-S-c>", desc = "Copy to clipboard", mode = "v" },
+      { "<C-S-v>", desc = "Paste from clipboard", mode = { "n", "i" } },
     },
   },
   keys = {
