@@ -1,10 +1,7 @@
 -- plugins/indent.lua
 return {
-  "TheGLander/indent-rainbowline.nvim",
-  dependencies = {
-    "lukas-reineke/indent-blankline.nvim",
-    "nvim-treesitter/nvim-treesitter",
-  },
+  "lukas-reineke/indent-blankline.nvim",
+  main = "ibl",
   event = { "BufReadPost", "BufNewFile" },
   config = function()
     local highlight = {
@@ -30,21 +27,17 @@ return {
       vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#81C8BE" })
     end)
 
-    -- Setup indent-blankline with rainbow colors
+    vim.g.rainbow_delimiters = { highlight = highlight }
+
+    -- Setup indent-blankline with rainbow colors cycling through levels
     require("ibl").setup({
       indent = {
         char = "│",
-        highlight = highlight,
-      },
-      whitespace = {
-        highlight = highlight,
-        remove_blankline_trail = false,
+        tab_char = "│",
+        highlight = highlight,  -- This cycles colors through indent levels
       },
       scope = {
-        enabled = true,
-        show_start = true,
-        show_end = false,
-        highlight = highlight,
+        enabled = false,  -- Disable scope to see all indent colors clearly
       },
       exclude = {
         filetypes = {
@@ -64,7 +57,10 @@ return {
       },
     })
 
-    -- Setup indent-rainbowline (use correct function)
-    hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+    -- Make sure colors cycle through indent levels
+    hooks.register(
+      hooks.type.WHITESPACE,
+      hooks.builtin.hide_first_space_indent_level
+    )
   end,
 }
