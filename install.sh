@@ -222,6 +222,8 @@ install_dependencies() {
   command_exists rg || missing_deps+=("ripgrep")
   command_exists fd || missing_deps+=("fd")
   command_exists lazygit || missing_deps+=("lazygit")
+  command_exists jq || missing_deps+=("jq")
+  command_exists tidy || missing_deps+=("tidy")
   command_exists curl || missing_deps+=("curl")
   command_exists wget || missing_deps+=("wget")
   command_exists gzip || missing_deps+=("gzip")
@@ -295,6 +297,8 @@ install_dependencies() {
             sudo install /tmp/lazygit /usr/local/bin
             rm /tmp/lazygit /tmp/lazygit.tar.gz
             ;;
+          jq) sudo apt-get install -y jq ;;
+          tidy) sudo apt-get install -y tidy ;;
           curl) sudo apt-get install -y curl ;;
           wget) sudo apt-get install -y wget ;;
           gzip) sudo apt-get install -y gzip ;;
@@ -326,6 +330,8 @@ install_dependencies() {
           ripgrep) sudo dnf install -y ripgrep ;;
           fd) sudo dnf install -y fd-find ;;
           lazygit) sudo dnf copr enable atim/lazygit -y && sudo dnf install -y lazygit ;;
+          jq) sudo dnf install -y jq ;;
+          tidy) sudo dnf install -y tidy ;;
           curl) sudo dnf install -y curl ;;
           wget) sudo dnf install -y wget ;;
           gzip) sudo dnf install -y gzip ;;
@@ -350,6 +356,8 @@ install_dependencies() {
           ripgrep) sudo pacman -S --noconfirm ripgrep ;;
           fd) sudo pacman -S --noconfirm fd ;;
           lazygit) sudo pacman -S --noconfirm lazygit ;;
+          jq) sudo pacman -S --noconfirm jq ;;
+          tidy) sudo pacman -S --noconfirm tidy ;;
           curl) sudo pacman -S --noconfirm curl ;;
           wget) sudo pacman -S --noconfirm wget ;;
           gzip) sudo pacman -S --noconfirm gzip ;;
@@ -374,6 +382,8 @@ install_dependencies() {
           ripgrep) brew install ripgrep ;;
           fd) brew install fd ;;
           lazygit) brew install lazygit ;;
+          jq) brew install jq ;;
+          tidy) brew install tidy-html5 ;;
           curl) brew install curl ;;
           wget) brew install wget ;;
           gzip) brew install gzip ;;
@@ -398,6 +408,8 @@ install_dependencies() {
           ripgrep) sudo zypper install -y ripgrep ;;
           fd) sudo zypper install -y fd ;;
           lazygit) print_warn "lazygit not available in zypper, install manually from https://github.com/jesseduffield/lazygit" ;;
+          jq) sudo zypper install -y jq ;;
+          tidy) sudo zypper install -y tidy ;;
           curl) sudo zypper install -y curl ;;
           wget) sudo zypper install -y wget ;;
           gzip) sudo zypper install -y gzip ;;
@@ -501,10 +513,16 @@ install_dependencies() {
   # Install formatter tools (none-ls requirements)
   print_step "Installing formatter tools for none-ls..."
 
-  # prettierd (JS/TS/Astro/React/Next/Bun)
-  if command_exists npm && ! command_exists prettierd; then
-    print_info "Installing prettierd..."
-    npm install -g @fsouza/prettierd
+  # prettier and prettierd (JS/TS/Astro/React/Next/Bun)
+  if command_exists npm; then
+    if ! command_exists prettier; then
+      print_info "Installing prettier..."
+      npm install -g prettier
+    fi
+    if ! command_exists prettierd; then
+      print_info "Installing prettierd..."
+      npm install -g @fsouza/prettierd
+    fi
   fi
 
   # gofumpt and goimports (Go)
@@ -519,16 +537,34 @@ install_dependencies() {
     fi
   fi
 
-  # black (Python)
-  if command_exists pip3 && ! command -v black >/dev/null 2>&1; then
-    print_info "Installing black..."
-    pip3 install --user black
+  # black and isort (Python)
+  if command_exists pip3; then
+    if ! command -v black >/dev/null 2>&1; then
+      print_info "Installing black..."
+      pip3 install --user black
+    fi
+    if ! command -v isort >/dev/null 2>&1; then
+      print_info "Installing isort..."
+      pip3 install --user isort
+    fi
   fi
 
   # php-cs-fixer (PHP)
   if command_exists composer && ! command -v php-cs-fixer >/dev/null 2>&1; then
     print_info "Installing php-cs-fixer..."
     composer global require friendsofphp/php-cs-fixer
+  fi
+
+  # stylua (Lua)
+  if command_exists cargo && ! command_exists stylua; then
+    print_info "Installing stylua..."
+    cargo install stylua
+  fi
+
+  # rustfmt (Rust - comes with rustup, verify installation)
+  if command_exists rustup && ! command_exists rustfmt; then
+    print_info "Installing rustfmt component..."
+    rustup component add rustfmt
   fi
 
   print_info "Formatter tools installation complete ✓"

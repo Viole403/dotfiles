@@ -25,6 +25,8 @@ Personally, I use `Fira Code` + `Symbols Nerd Font`.
 - [`ripgrep`](https://github.com/BurntSushi/ripgrep) - Fast grep for Telescope
 - [`fd`](https://github.com/sharkdp/fd) - Fast find for Telescope
 - [`lazygit`](https://github.com/jesseduffield/lazygit) - Git UI in terminal
+- [`jq`](https://github.com/jqlang/jq) - JSON processor for rest.nvim
+- `tidy` - HTML formatter for rest.nvim
 - `curl`, `wget`, `gzip`, `tar`, `unzip` - Download and archive utilities
 - `code-minimap` - Code minimap sidebar (via cargo)
 - `tree-sitter-cli` - Syntax tree parser (via cargo)
@@ -73,8 +75,8 @@ The installer automatically:
 - ✅ Validates Neovim >= 0.9.0 and Go >= 1.21 versions
 - ✅ Detects your package manager (apt, dnf, pacman, brew, scoop, choco, winget)
 - ✅ Installs all required dependencies (git, make, python3, nodejs, golang, rust)
-- ✅ Installs essential CLI tools (ripgrep, fd, lazygit, curl, wget, archives)
-- ✅ Installs code-minimap via cargo
+- ✅ Installs essential CLI tools (ripgrep, fd, lazygit, jq, tidy, curl, wget, archives)
+- ✅ Installs code-minimap and tree-sitter-cli via cargo
 - ✅ Creates config symlinks for nvim/lvim
 - ✅ Optional: Integrates with chezmoi for multi-machine management
 

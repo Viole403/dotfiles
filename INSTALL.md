@@ -28,6 +28,8 @@ You can choose between:
 - **`ripgrep`** - Fast grep (required for `:Telescope live_grep`)
 - **`fd`** - Fast find (improves `:Telescope find_files`)
 - **`lazygit`** - Git UI inside Neovim
+- **`jq`** - JSON processor (required for rest.nvim)
+- **`tidy`** - HTML formatter (required for rest.nvim)
 - **`curl`** / **`wget`** - Download tools
 - **`gzip`** / **`tar`** / **`unzip`** / **`7zip`** - Archive utilities
 - **`code-minimap`** - Code minimap sidebar (via cargo)
@@ -48,8 +50,8 @@ The provided installation scripts automatically:
 - ✅ Check for Neovim >= 0.9.0 and Go >= 1.21
 - ✅ Detect your package manager (apt, dnf, pacman, brew, scoop, choco, winget)
 - ✅ Install missing core tools: git, make, python3, pip, nodejs, npm, golang, rust/cargo
-- ✅ Install essential CLI tools: ripgrep, fd, lazygit, curl, wget, gzip, tar, unzip
-- ✅ Install code-minimap via cargo
+- ✅ Install essential CLI tools: ripgrep, fd, lazygit, jq, tidy, curl, wget, gzip, tar, unzip
+- ✅ Install code-minimap and tree-sitter-cli via cargo
 - ✅ Create symlinks or use chezmoi for dotfile management
 
 ### Manual Installation (Linux)
@@ -61,10 +63,10 @@ The provided installation scripts automatically:
 sudo apt install git make neovim python3 python3-pip nodejs npm golang cargo
 
 # Essential CLI tools
-sudo apt install ripgrep fd-find lazygit curl wget gzip tar unzip
+sudo apt install ripgrep fd-find lazygit jq tidy curl wget gzip tar unzip
 
-# Install code-minimap
-cargo install --locked code-minimap
+# Install code-minimap and tree-sitter-cli
+cargo install --locked code-minimap tree-sitter-cli
 ```
 
 **Arch Linux**:
@@ -74,10 +76,10 @@ cargo install --locked code-minimap
 sudo pacman -S git make neovim python python-pip nodejs npm go rust
 
 # Essential CLI tools
-sudo pacman -S ripgrep fd lazygit curl wget gzip tar unzip
+sudo pacman -S ripgrep fd lazygit jq tidy curl wget gzip tar unzip
 
-# Install code-minimap
-cargo install --locked code-minimap
+# Install code-minimap and tree-sitter-cli
+cargo install --locked code-minimap tree-sitter-cli
 ```
 
 **Fedora**:
@@ -87,11 +89,11 @@ cargo install --locked code-minimap
 sudo dnf install git make neovim python3 python3-pip nodejs npm golang cargo
 
 # Essential CLI tools
-sudo dnf install ripgrep fd-find curl wget gzip tar unzip
+sudo dnf install ripgrep fd-find jq tidy curl wget gzip tar unzip
 sudo dnf copr enable atim/lazygit -y && sudo dnf install lazygit
 
-# Install code-minimap
-cargo install --locked code-minimap
+# Install code-minimap and tree-sitter-cli
+cargo install --locked code-minimap tree-sitter-cli
 ```
 
 ### Manual Installation (macOS)
@@ -102,10 +104,10 @@ cargo install --locked code-minimap
 brew install git make neovim python3 node go rust
 
 # Essential CLI tools
-brew install ripgrep fd lazygit curl wget gzip gnu-tar unzip
+brew install ripgrep fd lazygit jq tidy-html5 curl wget gzip gnu-tar unzip
 
-# Install code-minimap
-cargo install --locked code-minimap
+# Install code-minimap and tree-sitter-cli
+cargo install --locked code-minimap tree-sitter-cli
 ```
 
 ### Manual Installation (Windows)
@@ -117,10 +119,10 @@ cargo install --locked code-minimap
 scoop install git make neovim python nodejs golang rust
 
 # Essential CLI tools
-scoop install ripgrep fd lazygit curl wget gzip tar 7zip
+scoop install ripgrep fd lazygit jq tidy curl wget gzip tar 7zip
 
-# Install code-minimap
-cargo install --locked code-minimap
+# Install code-minimap and tree-sitter-cli
+cargo install --locked code-minimap tree-sitter-cli
 ```
 
 **Using Chocolatey** (<https://chocolatey.org>):
@@ -130,10 +132,10 @@ cargo install --locked code-minimap
 choco install git make neovim python nodejs golang rust -y
 
 # Essential CLI tools
-choco install ripgrep fd lazygit curl wget gzip tar 7zip -y
+choco install ripgrep fd lazygit jq tidy curl wget gzip tar 7zip -y
 
-# Install code-minimap
-cargo install --locked code-minimap
+# Install code-minimap and tree-sitter-cli
+cargo install --locked code-minimap tree-sitter-cli
 ```
 
 **Using winget** (built-in Windows 10/11):
@@ -143,10 +145,13 @@ cargo install --locked code-minimap
 winget install Git.Git Neovim.Neovim GnuWin32.Make Python.Python.3.11 OpenJS.NodeJS GoLang.Go Rustlang.Rust.MSVC --silent
 
 # Essential CLI tools
-winget install BurntSushi.ripgrep.MSVC sharkdp.fd JesseDuffield.lazygit JernejSimoncic.Wget 7zip.7zip --silent
+winget install BurntSushi.ripgrep.MSVC sharkdp.fd JesseDuffield.lazygit stedolan.jq JernejSimoncic.Wget 7zip.7zip --silent
 
-# Install code-minimap (curl and tar are built into Windows 10+)
-cargo install --locked code-minimap
+# Install tidy (HTML formatter)
+scoop install tidy
+
+# Install code-minimap and tree-sitter-cli (curl and tar are built into Windows 10+)
+cargo install --locked code-minimap tree-sitter-cli
 ```
 
 ## Quick Install Methods

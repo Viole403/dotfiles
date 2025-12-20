@@ -231,6 +231,8 @@ function Install-Dependencies {
     if (-not (Test-CommandExists "rg")) { $missingDeps += "ripgrep" }
     if (-not (Test-CommandExists "fd")) { $missingDeps += "fd" }
     if (-not (Test-CommandExists "lazygit")) { $missingDeps += "lazygit" }
+    if (-not (Test-CommandExists "jq")) { $missingDeps += "jq" }
+    if (-not (Test-CommandExists "tidy")) { $missingDeps += "tidy" }
     if (-not (Test-CommandExists "curl")) { $missingDeps += "curl" }
     if (-not (Test-CommandExists "wget")) { $missingDeps += "wget" }
     if (-not (Test-CommandExists "gzip")) { $missingDeps += "gzip" }
@@ -299,6 +301,8 @@ function Install-Dependencies {
                     "ripgrep" { scoop install ripgrep }
                     "fd" { scoop install fd }
                     "lazygit" { scoop install lazygit }
+                    "jq" { scoop install jq }
+                    "tidy" { scoop install tidy }
                     "curl" { scoop install curl }
                     "wget" { scoop install wget }
                     "gzip" { scoop install gzip }
@@ -322,6 +326,8 @@ function Install-Dependencies {
                     "ripgrep" { choco install ripgrep -y }
                     "fd" { choco install fd -y }
                     "lazygit" { choco install lazygit -y }
+                    "jq" { choco install jq -y }
+                    "tidy" { choco install tidy-html5 -y }
                     "curl" { choco install curl -y }
                     "wget" { choco install wget -y }
                     "gzip" { choco install gzip -y }
@@ -345,6 +351,8 @@ function Install-Dependencies {
                     "ripgrep" { winget install BurntSushi.ripgrep.MSVC --silent }
                     "fd" { winget install sharkdp.fd --silent }
                     "lazygit" { winget install JesseDuffield.lazygit --silent }
+                    "jq" { winget install stedolan.jq --silent }
+                    "tidy" { Write-Warn "tidy not available via winget. Install via scoop: scoop install tidy" }
                     "curl" { Write-Info "curl is built into Windows 10+" }
                     "wget" { winget install JernejSimoncic.Wget --silent }
                     "gzip" { Write-Info "Use 7zip for compression" }
@@ -408,10 +416,16 @@ function Install-Dependencies {
     # Install formatter tools (none-ls requirements)
     Write-Step "Installing formatter tools for none-ls..."
 
-    # prettierd (JS/TS/Astro/React/Next/Bun)
-    if ((Test-CommandExists "npm") -and -not (Test-CommandExists "prettierd")) {
-        Write-Info "Installing prettierd..."
-        npm install -g @fsouza/prettierd
+    # prettier and prettierd (JS/TS/Astro/React/Next/Bun)
+    if (Test-CommandExists "npm") {
+        if (-not (Test-CommandExists "prettier")) {
+            Write-Info "Installing prettier..."
+            npm install -g prettier
+        }
+        if (-not (Test-CommandExists "prettierd")) {
+            Write-Info "Installing prettierd..."
+            npm install -g @fsouza/prettierd
+        }
     }
 
     # gofumpt and goimports (Go)
@@ -426,16 +440,34 @@ function Install-Dependencies {
         }
     }
 
-    # black (Python)
-    if ((Test-CommandExists "pip") -and -not (Get-Command black -ErrorAction SilentlyContinue)) {
-        Write-Info "Installing black..."
-        pip install --user black
+    # black and isort (Python)
+    if (Test-CommandExists "pip") {
+        if (-not (Get-Command black -ErrorAction SilentlyContinue)) {
+            Write-Info "Installing black..."
+            pip install --user black
+        }
+        if (-not (Get-Command isort -ErrorAction SilentlyContinue)) {
+            Write-Info "Installing isort..."
+            pip install --user isort
+        }
     }
 
     # php-cs-fixer (PHP)
     if ((Test-CommandExists "composer") -and -not (Get-Command php-cs-fixer -ErrorAction SilentlyContinue)) {
         Write-Info "Installing php-cs-fixer..."
         composer global require friendsofphp/php-cs-fixer
+    }
+
+    # stylua (Lua)
+    if ((Test-CommandExists "cargo") -and -not (Test-CommandExists "stylua")) {
+        Write-Info "Installing stylua..."
+        cargo install stylua
+    }
+
+    # rustfmt (Rust - comes with rustup, verify installation)
+    if ((Test-CommandExists "rustup") -and -not (Test-CommandExists "rustfmt")) {
+        Write-Info "Installing rustfmt component..."
+        rustup component add rustfmt
     }
 
     Write-Info "Formatter tools installation complete ✓"
