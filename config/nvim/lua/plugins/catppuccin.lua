@@ -17,18 +17,23 @@ return {
         comments = { "italic" },
         conditionals = { "italic" },
       },
+      auto_integrations = true,
       integrations = {
-        cmp = true,
-        gitsigns = true,
-        treesitter = true,
-        telescope = true,
-        rainbow_delimiters = true,
-        alpha = true,
-        nvimtree = true,
+        cmp = true,            -- Add nvim-cmp integration
+        gitsigns = true,  -- Add Gitsigns integration
+        treesitter = true,    -- Add Treesitter integration
+        telescope = true,      -- Add Telescope integration
+        rainbow_delimiters = true, -- Add Rainbow Delimiters integration
+        alpha = true,           -- Add Alpha integration
+        nvimtree = true,         -- Add NvimTree integration
+        flash_nvim = true,           -- Add Flash integration
+        which_key = true,           -- Add Which Key integration
+        -- Add Indent Blankline integration
         indent_blankline = {
           enabled = true,
           colored_indent_levels = true,
         },
+        -- Add native LSP integration
         native_lsp = {
           enabled = true,
           virtual_text = {
