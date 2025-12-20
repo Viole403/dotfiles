@@ -180,9 +180,16 @@ return {
     {
       "<leader>?",
       function()
-        require("which-key").show({ global = false })
+        require("which-key").show({ global = true })  -- Show ALL keymaps (global + buffer-local)
       end,
-      desc = "Buffer Local Keymaps (which-key)",
+      desc = "Show all keymaps (which-key)",
+    },
+    {
+      "<leader>?b",
+      function()
+        require("which-key").show({ global = false })  -- Show only buffer-local
+      end,
+      desc = "Show buffer keymaps",
     },
   },
 }
