@@ -30,7 +30,7 @@ require("lazy").setup({
   require("plugins.autopairs"),
   require("plugins.cmp"),
   require("plugins.comment"),
-  require("plugins.flash")
+  require("plugins.flash"),
   require("plugins.gitsigns"),
   require("plugins.indent"),
   require("plugins.lsp"),
