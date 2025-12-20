@@ -11,37 +11,59 @@ return {
       ensure_installed = {
         "vim", "vimdoc", "bash", "lua", "python", "go", "java", "php", "rust",
         "html", "css", "json", "javascript", "typescript", "tsx", "yaml", "markdown",
-        "scala", "org", "c", "ruby", "http"
+        "scala", "org", "c", "ruby", "http", "toml", "markdown_inline", "query"
       },
+
       sync_install = false,
       auto_install = true,
-      ignore_install = {}, -- List of parsers to ignore installing
+      ignore_install = { "phpdoc" },
+
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
-        disable = function(lang, buf)
-          -- Disable for large files or if parser not available
-          local max_filesize = 100 * 1024 -- 100 KB
-          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-          if ok and stats and stats.size > max_filesize then
-            return true
-          end
-        end,
       },
     }
 
-    -- Setup rainbow-delimiters separately (it's not a treesitter module)
-    local rainbow_delimiters = require('rainbow-delimiters')
-
-    vim.g.rainbow_delimiters = {
-      strategy = {
-        [''] = rainbow_delimiters.strategy['global'],
-        vim = rainbow_delimiters.strategy['local'],
-      },
-      query = {
-        [''] = 'rainbow-delimiters',
-        lua = 'rainbow-blocks',
-      },
-    }
+    -- Setup rainbow-delimiters with pcall to avoid errors if not installed
+    local rainbow_ok, rainbow_delimiters = pcall(require, 'rainbow-delimiters')
+    if rainbow_ok then
+      vim.g.rainbow_delimiters = {
+        strategy = {
+          [''] = rainbow_delimiters.strategy['global'],
+          vim = rainbow_delimiters.strategy['local'],
+          lua = rainbow_delimiters.strategy['global'],
+          python = rainbow_delimiters.strategy['global'],
+          go = rainbow_delimiters.strategy['global'],
+          rust = rainbow_delimiters.strategy['global'],
+          java = rainbow_delimiters.strategy['global'],
+          javascript = rainbow_delimiters.strategy['global'],
+          typescript = rainbow_delimiters.strategy['global'],
+          php = rainbow_delimiters.strategy['global'],
+          ruby = rainbow_delimiters.strategy['global'],
+          scala = rainbow_delimiters.strategy['global'],
+          c = rainbow_delimiters.strategy['global'],
+          toml = rainbow_delimiters.strategy['global'],
+          yaml = rainbow_delimiters.strategy['global'],
+          json = rainbow_delimiters.strategy['global'],
+        },
+        query = {
+          [''] = 'rainbow-delimiters',
+          lua = 'rainbow-blocks',
+          javascript = 'rainbow-delimiters',
+          typescript = 'rainbow-delimiters',
+          tsx = 'rainbow-delimiters',
+          html = 'rainbow-tags',
+        },
+        highlight = {
+          'RainbowDelimiterRed',
+          'RainbowDelimiterYellow',
+          'RainbowDelimiterBlue',
+          'RainbowDelimiterOrange',
+          'RainbowDelimiterGreen',
+          'RainbowDelimiterViolet',
+          'RainbowDelimiterCyan',
+        },
+      }
+    end
   end
 }
