@@ -18,3 +18,23 @@ vim.g.have_nerd_font = false
 
 vim.opt.termguicolors = true
 vim.diagnostic.config({ signs = false })
+
+-- Set completeopt for better completion experience
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.shortmess:append("c")
+
+-- Enable mouse support in all modes
+vim.opt.mouse = "a"
+
+-- Enable break indent
+vim.opt.breakindent = true
+
+-- Save undo history
+vim.opt.undofile = true
+
+-- Enable line numbers and relative line numbers
+vim.opt.number = true
+vim.opt.relativenumber = true
+
+-- Set sign column to always be visible
+vim.opt.signcolumn = "yes"
