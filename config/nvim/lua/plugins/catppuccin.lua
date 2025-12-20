@@ -6,7 +6,6 @@ return {
   config = function()
     require("catppuccin").setup({
       flavour = "frappe",
-      auto_integrations = true,
       background = {
         light = "latte",
         dark = "frappe",
@@ -23,6 +22,9 @@ return {
         gitsigns = true,
         treesitter = true,
         telescope = true,
+        rainbow_delimiters = true,
+        alpha = true,
+        nvimtree = true,
         native_lsp = {
           enabled = true,
           virtual_text = {

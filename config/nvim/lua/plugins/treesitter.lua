@@ -1,5 +1,4 @@
 -- plugins/treesitter.lua
--- Treesitter configuration (synchronized with LunarVim config)
 return {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
@@ -10,7 +9,8 @@ return {
     configs.setup {
       -- Core parsers synchronized with lvim config
       ensure_installed = {
-        "vim", "vimdoc", "bash", "lua", "python", "go", "java", "php", "rust", "html", "css", "json", "javascript", "typescript", "tsx", "yaml", "markdown",
+        "vim", "vimdoc", "bash", "lua", "python", "go", "java", "php", "rust",
+        "html", "css", "json", "javascript", "typescript", "tsx", "yaml", "markdown",
         "scala", "org", "c", "ruby", "http"
       },
       sync_install = false,
@@ -27,6 +27,20 @@ return {
             return true
           end
         end,
+      },
+    }
+
+    -- Setup rainbow-delimiters separately (it's not a treesitter module)
+    local rainbow_delimiters = require('rainbow-delimiters')
+
+    vim.g.rainbow_delimiters = {
+      strategy = {
+        [''] = rainbow_delimiters.strategy['global'],
+        vim = rainbow_delimiters.strategy['local'],
+      },
+      query = {
+        [''] = 'rainbow-delimiters',
+        lua = 'rainbow-blocks',
       },
     }
   end
