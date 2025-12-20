@@ -25,6 +25,10 @@ return {
         rainbow_delimiters = true,
         alpha = true,
         nvimtree = true,
+        indent_blankline = {
+          enabled = true,
+          colored_indent_levels = true,
+        },
         native_lsp = {
           enabled = true,
           virtual_text = {

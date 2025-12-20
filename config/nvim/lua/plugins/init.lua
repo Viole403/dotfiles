@@ -28,9 +28,11 @@ require("lazy").setup({
 
   -- Code Features
   require("plugins.cmp"),
+  require("plugins.indent"),
   require("plugins.lsp"),
   require("plugins.minimap"),
   require("plugins.none-ls"),
+  require("plugins.rainbow"),
   require("plugins.treesitter"),
 
   -- Language-specific
@@ -39,7 +41,6 @@ require("lazy").setup({
   -- Utilities
   require("plugins.dadbod"),
   require("plugins.illuminate"),
-  require("plugins.rainbow"),
   require("plugins.rest"),
   require("plugins.terminal"),
   require("plugins.tmux"),
