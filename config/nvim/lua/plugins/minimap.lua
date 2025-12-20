@@ -16,10 +16,15 @@ return {
     -- Toggle mapping
     vim.keymap.set("n", "<leader>mm", "<cmd>MinimapToggle<CR>", { desc = "Toggle Minimap" })
 
-    -- Close and reopen minimap to fix positioning
+    -- Close and reopen minimap to fix positioning (with safety check)
     vim.defer_fn(function()
-      vim.cmd("MinimapClose")
-      vim.cmd("MinimapOpen")
-    end, 300)
+      -- Check if command exists before running
+      if vim.fn.exists(':MinimapClose') > 0 then
+        pcall(vim.cmd, "MinimapClose")
+      end
+      if vim.fn.exists(':MinimapOpen') > 0 then
+        pcall(vim.cmd, "MinimapOpen")
+      end
+    end, 500)  -- Increased delay to 500ms to ensure plugin is loaded
   end,
 }
