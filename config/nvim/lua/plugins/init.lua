@@ -28,6 +28,7 @@ require("lazy").setup({
 
   -- Code Features
   require("plugins.cmp"),
+  require("plugins.gitsigns"),
   require("plugins.indent"),
   require("plugins.lsp"),
   require("plugins.minimap"),
