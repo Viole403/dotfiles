@@ -1,3 +1,4 @@
+-- plugins/minimap.lua
 return {
   "wfxr/minimap.vim",
   lazy = false,
