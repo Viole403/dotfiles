@@ -1,3 +1,4 @@
+-- plugins/scala.lua
 return {
   "scalameta/nvim-metals",
   dependencies = {
