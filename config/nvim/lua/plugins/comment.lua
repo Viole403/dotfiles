@@ -6,23 +6,17 @@ return {
     require("Comment").setup({
       padding = true,
       sticky = true,
-      ignore = nil,
       toggler = {
-        line = "gcc",
-        block = "gbc",
+        line = "gcc",   -- Keep line comment
+        block = "gbc",  -- Keep block comment
       },
       opleader = {
-        line = "gc",
-        block = "gb",
-      },
-      extra = {
-        above = "gcO",
-        below = "gco",
-        eol = "gcA",
+        line = "gc",    -- Operator-pending mode
+        block = "gb",   -- Operator-pending mode
       },
       mappings = {
         basic = true,
-        extra = true,
+        extra = false,  -- Disable extra mappings to avoid conflicts
       },
     })
   end,

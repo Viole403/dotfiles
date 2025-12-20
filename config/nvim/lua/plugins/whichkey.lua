@@ -4,6 +4,7 @@ return {
   event = "VeryLazy",
   config = function()
     require("which-key").setup({
+      preset = "classic",
       plugins = {
         marks = true,
         registers = true,
@@ -15,12 +16,11 @@ return {
         breadcrumb = ">>",
         separator = "->",
         group = "+",
+        mappings = false,  -- Disable icons for mappings
       },
-      window = {
+      win = {  -- Ganti 'window' jadi 'win' (baru)
         border = "rounded",
         position = "bottom",
-        margin = { 1, 0, 1, 0 },
-        padding = { 1, 2, 1, 2 },
       },
     })
   end,
