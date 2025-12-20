@@ -32,6 +32,7 @@ require("lazy").setup({
   require("plugins.lsp"),
   require("plugins.minimap"),
   require("plugins.none-ls"),
+  require("plugins.scrollbar"),
   require("plugins.rainbow"),
   require("plugins.treesitter"),
 
