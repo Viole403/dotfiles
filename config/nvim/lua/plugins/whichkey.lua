@@ -42,10 +42,14 @@ return {
       title = true,
       title_pos = "center",
       zindex = 1000,
+      -- Transparent background for better visibility
+      wo = {
+        winblend = 0,
+      },
     },
     layout = {
-      width = { min = 20, max = 50 },
-      height = { min = 4, max = 25 },
+      width = { min = 20, max = 80 },  -- Wider window
+      height = { min = 4, max = 40 },  -- Taller window
       spacing = 3,
       align = "left",
     },
