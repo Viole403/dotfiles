@@ -1,4 +1,4 @@
--- config/nvim/lua/plugins/lsp/php.lua
+-- config/nvim/lua/plugins/lsp/python.lua
 local lsp = require("lspconfig")
 local c = require("plugins.lsp.common")
 
