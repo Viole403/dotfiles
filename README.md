@@ -33,6 +33,26 @@ Here's the list of what included in this dotfiles:
 - [`Neovim`](https://neovim.io) - Modern Vim-based editor with Lua configuration
 - [`LunarVim`](https://www.lunarvim.org) - Neovim configuration with IDE features
 
+## Features
+
+**Neovim Configuration includes:**
+
+- **Autocompletion** with [nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
+- **Bufferline** with [bufferline.nvim](https://github.com/akinsho/bufferline.nvim)
+- **Code minimap** with [minimap.vim](https://github.com/wfxr/minimap.vim)
+- **Color scheme** with [Catppuccin](https://github.com/catppuccin/nvim)
+- **Dashboard** with [Alpha](https://github.com/goolord/alpha-nvim)
+- **Database UI** with [vim-dadbod](https://github.com/tpope/vim-dadbod)
+- **File explorer** with [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua)
+- **Fuzzy finding** with [Telescope](https://github.com/nvim-telescope/telescope.nvim)
+- **Formatting and Linting** with [None-ls](https://github.com/nvimtools/none-ls.nvim)
+- **Language Server Protocol** with Native LSP ([nvim-lspconfig](https://github.com/neovim/nvim-lspconfig))
+- **Project management** with [project.nvim](https://github.com/ahmedkhalf/project.nvim)
+- **REST client** with [rest.nvim](https://github.com/rest-nvim/rest.nvim)
+- **Statusline** with [Lualine](https://github.com/nvim-lualine/lualine.nvim)
+- **Syntax highlighting** with [Treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- **Terminal** with [Toggleterm](https://github.com/akinsho/toggleterm.nvim)
+
 ## Installation
 
 See [INSTALL.md](INSTALL.md) for detailed installation instructions for Linux, WSL, macOS and Windows (PowerShell).
