@@ -27,15 +27,21 @@ require("lazy").setup({
   require("plugins.telescope"),
 
   -- Code Features
+  require("plugins.autopairs"),
   require("plugins.cmp"),
+  require("plugins.comment"),
+  require("plugins.flash")
   require("plugins.gitsigns"),
   require("plugins.indent"),
   require("plugins.lsp"),
   require("plugins.minimap"),
   require("plugins.none-ls"),
-  require("plugins.scrollbar"),
   require("plugins.rainbow"),
+  require("plugins.scrollbar"),
+  require("plugins.todo-comments"),
   require("plugins.treesitter"),
+  require("plugins.trouble"),
+  require("plugins.whichkey"),
 
   -- Language-specific
   require("plugins.scala"),
