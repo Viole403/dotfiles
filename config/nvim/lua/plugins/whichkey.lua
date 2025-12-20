@@ -2,26 +2,16 @@
 return {
   "folke/which-key.nvim",
   event = "VeryLazy",
-  config = function()
-    require("which-key").setup({
-      preset = "classic",
-      plugins = {
-        marks = true,
-        registers = true,
-        spelling = {
-          enabled = false,
-        },
-      },
-      icons = {
-        breadcrumb = ">>",
-        separator = "->",
-        group = "+",
-        mappings = false,  -- Disable icons for mappings
-      },
-      win = {  -- Ganti 'window' jadi 'win' (baru)
-        border = "rounded",
-        position = "bottom",
-      },
-    })
-  end,
+  opts = {
+    -- leave empty to use default settings
+  },
+  keys = {
+    {
+      "<leader>?",
+      function()
+        require("which-key").show({ global = false })
+      end,
+      desc = "Buffer Local Keymaps (which-key)",
+    },
+  },
 }
