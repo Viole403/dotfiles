@@ -53,6 +53,7 @@ require("lazy").setup({
   require("plugins.terminal"),
   require("plugins.tmux"),
   require("plugins.wakatime"),
+  require("plugins.whichkey"),
 }, {
   -- Disable luarocks support to avoid build issues
   rocks = {
