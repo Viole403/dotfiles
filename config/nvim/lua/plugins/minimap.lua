@@ -18,16 +18,27 @@ return {
         winblend = 0,
         show_integration_count = false,
         focusable = false,
-        zindex = 10,
       },
     })
 
-    -- Optional: toggle mapping
+    -- Toggle mapping
     vim.keymap.set("n", "<leader>mm", map.toggle, { desc = "Toggle MiniMap" })
 
-    -- Auto-open minimap after a short delay to ensure proper window layout
+    -- Close any existing minimap windows before opening
     vim.defer_fn(function()
-      map.open()
-    end, 100)
+      -- Close all minimap windows first
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.api.nvim_buf_is_valid(buf) then
+          local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+          if ft == "minimap" then
+            pcall(vim.api.nvim_win_close, win, true)
+          end
+        end
+      end
+
+      -- Now open a fresh minimap
+      pcall(map.open)
+    end, 200)
   end,
 }
