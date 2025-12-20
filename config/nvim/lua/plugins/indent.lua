@@ -64,7 +64,7 @@ return {
       },
     })
 
-    -- Setup indent-rainbowline
-    require("indent-rainbowline").make_scope_hl_from_rainbow(highlight)
+    -- Setup indent-rainbowline (use correct function)
+    hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
   end,
 }
