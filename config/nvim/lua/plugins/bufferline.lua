@@ -23,12 +23,6 @@ return {
             text_align = "center",
             separator = true,
           },
-          {
-            filetype = "minimap",
-            text = "Minimap",
-            text_align = "center",
-            separator = true,
-          },
         },
         diagnostics = "nvim_lsp",
         diagnostics_indicator = function(count, level)

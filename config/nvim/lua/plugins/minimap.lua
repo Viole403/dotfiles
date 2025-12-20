@@ -17,14 +17,17 @@ return {
         width = 10,
         winblend = 0,
         show_integration_count = false,
+        focusable = false,
+        zindex = 10,
       },
-      on_click = "scroll",
     })
 
     -- Optional: toggle mapping
     vim.keymap.set("n", "<leader>mm", map.toggle, { desc = "Toggle MiniMap" })
 
-    -- Optional: auto-show for all buffers
-    map.open()
+    -- Auto-open minimap after a short delay to ensure proper window layout
+    vim.defer_fn(function()
+      map.open()
+    end, 100)
   end,
 }
