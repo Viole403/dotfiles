@@ -7,7 +7,7 @@ return {
     local lsp = require("plugins.coding.lsp")
 
     lspconfig.pyright.setup({
-      capabilities = lsp.common.capabilities,
+      capabilities = lsp.common.get_capabilities(),
       on_attach = lsp.common.on_attach,
     })
 

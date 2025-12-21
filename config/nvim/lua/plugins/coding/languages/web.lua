@@ -8,7 +8,7 @@ return {
 
     for _, server in ipairs({ "html", "cssls", "jsonls", "astro" }) do
       lspconfig[server].setup({
-        capabilities = lsp.common.capabilities,
+        capabilities = lsp.common.get_capabilities(),
         on_attach = lsp.common.on_attach,
       })
     end

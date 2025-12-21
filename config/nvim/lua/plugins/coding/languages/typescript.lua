@@ -9,7 +9,7 @@ return {
 
     -- typescript-tools replaces ts_ls, no need for lsp/ts.lua
     require("typescript-tools").setup({
-      capabilities = lsp.common.capabilities,
+      capabilities = lsp.common.get_capabilities(),
       on_attach = lsp.common.on_attach,
       root_dir = util.root_pattern("package.json"),
       single_file_support = false,

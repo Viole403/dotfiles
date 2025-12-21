@@ -15,7 +15,7 @@ return {
       require("go").setup({
         -- Disable go.nvim's LSP, we'll use gopls directly
         lsp_cfg = {
-          capabilities = lsp.common.capabilities,
+          capabilities = lsp.common.get_capabilities(),
           on_attach = lsp.common.on_attach,
           settings = {
             gopls = {

@@ -7,7 +7,7 @@ return {
     local lsp = require("plugins.coding.lsp")
 
     lspconfig.lua_ls.setup({
-      capabilities = lsp.common.capabilities,
+      capabilities = lsp.common.get_capabilities(),
       on_attach = lsp.common.on_attach,
       settings = {
         Lua = {

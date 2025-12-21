@@ -9,7 +9,7 @@ return {
 
     -- Only activate in Deno projects (deno.json present)
     lspconfig.denols.setup({
-      capabilities = lsp.common.capabilities,
+      capabilities = lsp.common.get_capabilities(),
       on_attach = lsp.common.on_attach,
       root_dir = util.root_pattern("deno.json", "deno.jsonc"),
     })

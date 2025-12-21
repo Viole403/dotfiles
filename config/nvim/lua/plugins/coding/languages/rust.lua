@@ -11,7 +11,7 @@ return {
     -- No need for separate lsp/rust.lua
     rt.setup({
       server = {
-        capabilities = lsp.common.capabilities,
+        capabilities = lsp.common.get_capabilities(),
         on_attach = function(client, bufnr)
           lsp.common.on_attach(client, bufnr)
 
