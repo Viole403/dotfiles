@@ -44,7 +44,7 @@ require("lazy").setup({
 
   -- Coding (shared tools)
   require("plugins.coding.cmp"),
-  require("plugins.coding.lsp"),
+  -- require("plugins.coding.lsp"), -- Disabled to due deprecation of vim.lsp.util functions
   require("plugins.coding.none-ls"),
   require("plugins.coding.treesitter"),
   require("plugins.coding.gitsigns"),
@@ -53,16 +53,17 @@ require("lazy").setup({
   require("plugins.coding.dap"),
 
   -- Languages (LSP + formatters + language-specific tools)
-  require("plugins.coding.languages.go"),
-  require("plugins.coding.languages.rust"),
-  require("plugins.coding.languages.typescript"),
-  require("plugins.coding.languages.python"),
-  require("plugins.coding.languages.php"),
-  require("plugins.coding.languages.lua"),
-  require("plugins.coding.languages.deno"),
-  require("plugins.coding.languages.web"),
-  require("plugins.coding.languages.scala"),
-  require("plugins.coding.languages.tailwind"),
+  -- Disable coding for now due to deprecation of vim.lsp.util functions
+  -- require("plugins.coding.languages.go"),
+  -- require("plugins.coding.languages.rust"),
+  -- require("plugins.coding.languages.typescript"),
+  -- require("plugins.coding.languages.python"),
+  -- require("plugins.coding.languages.php"),
+  -- require("plugins.coding.languages.lua"),
+  -- require("plugins.coding.languages.deno"),
+  -- require("plugins.coding.languages.web"),
+  -- require("plugins.coding.languages.scala"),
+  -- require("plugins.coding.languages.tailwind"),
   require("plugins.tools.dadbod"),
   require("plugins.tools.rest"),
   require("plugins.tools.terminal"),
