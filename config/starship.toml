@@ -1,0 +1,105 @@
+# Starship Configuration File
+# For more information, see the documentation:
+# https://starship.rs/config/
+# Need to install Font Awesome or Nerd Font(JetBrains Mono Nerd Font) for icons to show properly.
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+command_timeout = 1000
+
+format = """
+$username$directory\
+${custom.nextjs}${custom.bun}${custom.npm}${custom.pnpm}${custom.yarn}\
+${custom.go}${custom.rust}${custom.php}${custom.lua}${custom.python}\
+${git_branch}$cmd_duration
+$character"""
+
+[username]
+style_user = "bg:cyan fg:black"
+style_root = "bg:cyan fg:black"
+format = "[](fg:cyan)[$user ]($style)"
+disabled = false
+show_always = true
+
+[directory]
+home_symbol = "  "
+style = "bg:green fg:black"
+format = "[ ~ 󰉋 $path ]($style)"
+truncation_length = 3
+
+# --- NEXTJS & JS TOOLS (3-LEVEL DETECTION) ---
+
+[custom.nextjs]
+command = "grep '\"next\":' package.json | cut -d'\"' -f4 | tr -d '^~' || grep '\"next\":' ../package.json | cut -d'\"' -f4 | tr -d '^~' || grep '\"next\":' ../../package.json | cut -d'\"' -f4 | tr -d '^~'"
+detect_files = ["next.config.js", "next.config.mjs", "next.config.ts", "../next.config.js", "../../next.config.js"]
+format = "(bold fg:white)[  $output](bold bg:white fg:black)(bold fg:white)"
+
+[custom.bun]
+command = "bun -v"
+detect_files = ["bun.lockb", "bun.lock", "../bun.lockb", "../../bun.lockb"]
+format = "(bold fg:white)[ via  $output ](bold bg:white fg:black)(bold fg:white)"
+
+[custom.npm]
+command = "npm -v"
+detect_files = ["package-lock.json", "../package-lock.json", "../../package-lock.json"]
+format = "(bold fg:white)[ via  $output ](bold bg:white fg:black)(bold fg:white)"
+
+[custom.pnpm]
+command = "pnpm -v"
+detect_files = ["pnpm-lock.yaml", "../pnpm-lock.yaml", "../../pnpm-lock.yaml"]
+format = "(bold fg:white)[ via  $output ](bold bg:white fg:black)(bold fg:white)"
+
+[custom.yarn]
+command = "yarn -v"
+detect_files = ["yarn.lock", "../yarn.lock", "../../yarn.lock"]
+format = "(bold fg:white)[ via  $output ](bold bg:white fg:black)(bold fg:white)"
+
+# --- PROGRAMMING LANGUAGES ---
+
+[custom.go]
+command = "go version | cut -d' ' -f3 | tr -d 'go'"
+detect_files = ["go.mod", "../go.mod", "../../go.mod"]
+format = "(bold fg:white)[  $output ](bold bg:#00ADD8 fg:black)(bold fg:white)"
+
+[custom.rust]
+command = "rustc --version | cut -d' ' -f2"
+detect_files = ["Cargo.toml", "../Cargo.toml", "../../Cargo.toml"]
+format = "(bold fg:white)[  $output ](bold bg:#CE412B fg:white)(bold fg:white)"
+
+[custom.php]
+command = "php -v | head -n 1 | cut -d' ' -f2"
+detect_files = ["composer.json", "artisan", "../composer.json"]
+format = "(bold fg:white)[ 󰌟 $output ](bold bg:#777BB4 fg:white)(bold fg:white)"
+
+[custom.lua]
+command = "lua -v | cut -d' ' -f2"
+detect_files = ["main.lua", "../main.lua", "../../main.lua"]
+format = "(bold fg:white)[  $output ](bold bg:#000080 fg:white)(bold fg:white)"
+
+[custom.python]
+command = "python --version | cut -d' ' -f2"
+detect_files = ["requirements.txt", "pyproject.toml", "../requirements.txt"]
+format = "(bold fg:white)[  $output ](bold bg:#3776AB fg:white)(bold fg:white)"
+
+# --- CORE SYSTEM ---
+
+[git_branch]
+style = "bg:#F1502F fg:black"
+symbol = "󰘬"
+format = "[ $symbol $branch ]($style)"
+
+[cmd_duration]
+min_time = 0
+style = "bg:yellow fg:black"
+format = "[ 󰪢 $duration]($style)[](fg:yellow) "
+
+[character]
+success_symbol = "[   ](bold fg:blue)"
+error_symbol = "[   ](bold fg:red)"
+
+[package]
+disabled = true
+
+[line_break]
+disabled = false
