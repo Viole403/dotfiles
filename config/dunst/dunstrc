@@ -1,0 +1,49 @@
+[global]
+    monitor = 0
+    follow = mouse
+    
+    # Sintaks Modern untuk Width & Height
+    width = 300
+    height = (0, 100)
+    
+    origin = top-right
+    
+    # Sintaks Modern untuk Offset (Horizontal, Vertical)
+    offset = (15, 15)
+    
+    scale = 0
+    notification_limit = 5
+    
+    # Progress Bar (Frappé Blue)
+    progress_bar = true
+    progress_bar_height = 10
+    progress_bar_frame_width = 1
+    progress_bar_min_width = 150
+    progress_bar_max_width = 300
+    highlight = "#8ca0e3"
+
+    # Style
+    font = JetBrainsMono Nerd Font 10
+    frame_width = 2
+    separator_color = frame
+    corner_radius = 10
+    padding = 10
+    horizontal_padding = 10
+
+[urgency_low]
+    background = "#303446"
+    foreground = "#c6d0f5"
+    frame_color = "#8ca0e3"
+    timeout = 5
+
+[urgency_normal]
+    background = "#303446"
+    foreground = "#c6d0f5"
+    frame_color = "#8ca0e3"
+    timeout = 10
+
+[urgency_critical]
+    background = "#303446"
+    foreground = "#c6d0f5"
+    frame_color = "#e78284"
+    timeout = 0
