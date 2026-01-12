@@ -4,16 +4,16 @@ import Quickshell.Services.Pipewire
 import QtQuick
 import QtQuick.Controls
 
-import "./../"
+import "./.."
 
 Item {
   id: root
-  
+
   implicitWidth: volumeText.implicitWidth + 10
   implicitHeight: volumeText.implicitHeight
 
   property PwNode sink: Pipewire.defaultAudioSink
-  
+
   PwObjectTracker {
     objects: [ sink ]
   }
@@ -37,7 +37,7 @@ Item {
   function getTooltipText() {
     // FIX: Guard against null sink during startup
     if (!sink || !sink.audio) return "Connecting to audio..."
-    
+
     return (sink.description ? sink.description + " · " : "") + (sink.audio.muted ? "Muted" : Math.round(sink.audio.volume * 100) + "%")
   }
 

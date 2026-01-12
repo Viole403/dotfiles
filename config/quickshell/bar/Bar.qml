@@ -5,14 +5,14 @@ import QtQuick.Layouts
 
 import Quickshell.Services.SystemTray
 
-import "./clock/"
-import "./battery/"
-import "./tray/"
-import "./workspace/"
-import "./wifi/"
-import "./volume/"
-import "./activewindow/"
-import "./mpris/"
+import "./clock"
+import "./battery"
+import "./tray"
+import "./workspace"
+import "./wifi"
+import "./volume"
+import "./activewindow"
+import "./mpris"
 
 import "."
 

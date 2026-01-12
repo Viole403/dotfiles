@@ -3,11 +3,11 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Controls
 
-import "./../"
+import "./.."
 
 Item {
   id: root
-  
+
   implicitWidth: wifiText.implicitWidth + 10
   implicitHeight: wifiText.implicitHeight
 

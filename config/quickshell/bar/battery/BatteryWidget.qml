@@ -3,11 +3,11 @@ import Quickshell.Services.UPower
 import QtQuick
 import QtQuick.Controls
 
-import "./../"
+import "./.."
 
 Item {
   id: root
-  
+
   implicitWidth: batteryText.implicitWidth + 10
   implicitHeight: batteryText.implicitHeight
 
@@ -72,10 +72,10 @@ Item {
 
   function getTooltipText() {
     if (!battery) return "No battery detected"
-    
+
     var percentage = Math.round(battery.percentage * 100)
     var tooltipText = percentage + "%"
-    
+
     if (battery.state === UPowerDeviceState.Charging) {
       if (battery.timeToFull > 0) {
         tooltipText += " - " + formatTime(battery.timeToFull) + " until full"
@@ -85,7 +85,7 @@ Item {
         tooltipText += " - " + formatTime(battery.timeToEmpty) + " remaining"
       }
     }
-    
+
     return tooltipText
   }
 
